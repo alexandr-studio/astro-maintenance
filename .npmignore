@@ -1,0 +1,39 @@
+# Source and development files
+src/
+tsconfig.json
+astro.config.mjs
+
+# Keep assets folder for README.md images
+# assets/
+
+# Version control
+.git/
+.gitignore
+
+# Package manager
+node_modules/
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
+# Editor config files
+.vscode/
+.idea/
+.DS_Store
+
+# Test files
+**/*.test.ts
+**/*.spec.ts
+test/
+tests/
+
+# CI/CD
+.github/
+.gitlab/
+.travis.yml
+
+# Other configuration files
+*.config.js
+*.config.ts
+.eslintrc*
+.prettier*
+.editorconfig

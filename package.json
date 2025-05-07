@@ -15,9 +15,11 @@
     "maintenance",
     "coming soon",
     "integration",
-    "plugin"
+    "plugin",
+    "countdown",
+    "under construction"
   ],
-  "author": "Your Name",
+  "author": "Alexander Vu",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^22.15.12",
@@ -34,6 +36,7 @@
   },
   "files": [
     "dist/",
-    "README.md"
+    "README.md",
+    "assets/"
   ]
 }
