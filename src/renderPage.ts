@@ -82,7 +82,7 @@ export default function renderPage(options: MaintenanceOptions) {
   const {
     template = "simple",
     title = "We're sorry! The Site is under maintenance right now.",
-    description = "Our website is currently down for scheduled maintenace. We'll return shortly. We appreciate your patience.",
+    description = "Our website is currently down for scheduled maintenance. We'll return shortly. We appreciate your patience.",
     logo,
     emailAddress,
     emailText = "Contact us for further information.",

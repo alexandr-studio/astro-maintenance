@@ -1,6 +1,6 @@
 # Astro-Maintenance
 
-![Logo](assets/astro-maintance-1x.png)
+![Logo](assets/astro-maintenance-1x.png)
 
 The main purpose of the integration is to provide a **simple way** to add **maintenance** and **coming soon** pages to Astro projects during development or scheduled maintenance periods. It should be easy to use and highly customizable.
 
