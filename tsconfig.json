@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "outDir": "./dist",
+      "rootDir": "./src",
+      "declaration": true,
+      "declarationDir": "./dist",
+      "module": "NodeNext",
+      "target": "ESNext",
+      "moduleResolution": "NodeNext",
+      "allowJs": false,
+      "esModuleInterop": true,
+      "strict": true,
+      "skipLibCheck": true
+    },
+    "include": ["src"]
+  }

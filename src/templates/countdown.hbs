@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <style>
+      :root {
+        --background: rgb(255 255 255);
+        --foreground: rgb(0 0 0);
+        --muted: rgb(140 140 140);
+        --accent: rgb(60 60 60);
+      }
+
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        font-family: sans-serif;
+        color: var(--foreground);
+        background-color: var(--background);
+        box-sizing: border-box;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-content: stretch;
+        align-items: stretch;
+        height: 100%;
+        padding: 3vh 1rem;
+        box-sizing: border-box;
+      }
+
+      p {
+        font-size: 1.4em;
+        color: var(--muted);
+      }
+
+      a {
+        color: var(--accent);
+        font-weight: 600;
+      }
+
+      main > div {
+        text-align: center;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+      }
+
+      .content {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-content: stretch;
+        align-items: center;
+      }
+
+      .content svg {
+        padding: 3vh 0;
+        height: clamp(200px, 50vh, 400px);
+      }
+
+      .title {
+        font-size: 3rem;
+        font-weight: 500;
+        margin-bottom: 1.4rem;
+      }
+
+      .logo {
+        color: black;
+        font-size: 2.3em;
+        font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-content: stretch;
+        align-items: center;
+      }
+
+      .copyright {
+        font-size: 0.85em;
+        color: var(--muted);
+      }
+
+      .background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        filter: blur(100px);
+      }
+
+      .time-display {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: center;
+        align-items: stretch;
+        gap: 2rem;
+        margin: 3rem 0;
+      }
+
+      .time-group {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: center;
+        align-items: stretch;
+        max-width: 10.2rem;
+        gap: 0.6rem;
+      }
+
+      .time-group.extend {
+        min-width: 14rem;
+      }
+
+      .time-value {
+        border: 1px solid var(--muted);
+        border-radius: .6rem;
+        font-size: 3rem;
+        line-height: 5rem;
+        min-width: 4rem;
+      }
+
+      .time-caption {
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="logo">
+        {{#if logo}}<img src="{{logo}}" alt="Logo" class="logo" />{{else}}
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="115" height="48"><path fill="#17191E" d="M7.77 36.35C6.4 35.11 6 32.51 6.57 30.62c.99 1.2 2.35 1.57 3.75 1.78 2.18.33 4.31.2 6.33-.78.23-.12.44-.27.7-.42.18.55.23 1.1.17 1.67a4.56 4.56 0 0 1-1.94 3.23c-.43.32-.9.61-1.34.91-1.38.94-1.76 2.03-1.24 3.62l.05.17a3.63 3.63 0 0 1-1.6-1.38 3.87 3.87 0 0 1-.63-2.1c0-.37 0-.74-.05-1.1-.13-.9-.55-1.3-1.33-1.32a1.56 1.56 0 0 0-1.63 1.26c0 .06-.03.12-.05.2Z"/><path fill="url(#a)" d="M7.77 36.35C6.4 35.11 6 32.51 6.57 30.62c.99 1.2 2.35 1.57 3.75 1.78 2.18.33 4.31.2 6.33-.78.23-.12.44-.27.7-.42.18.55.23 1.1.17 1.67a4.56 4.56 0 0 1-1.94 3.23c-.43.32-.9.61-1.34.91-1.38.94-1.76 2.03-1.24 3.62l.05.17a3.63 3.63 0 0 1-1.6-1.38 3.87 3.87 0 0 1-.63-2.1c0-.37 0-.74-.05-1.1-.13-.9-.55-1.3-1.33-1.32a1.56 1.56 0 0 0-1.63 1.26c0 .06-.03.12-.05.2Z"/><path fill="#17191E" d="M.02 30.31s4.02-1.95 8.05-1.95l3.04-9.4c.11-.45.44-.76.82-.76.37 0 .7.31.82.76l3.04 9.4c4.77 0 8.05 1.95 8.05 1.95L17 11.71c-.2-.56-.53-.91-.98-.91H7.83c-.44 0-.76.35-.97.9L.02 30.31Zm42.37-5.97c0 1.64-2.05 2.62-4.88 2.62-1.85 0-2.5-.45-2.5-1.41 0-1 .8-1.49 2.65-1.49 1.67 0 3.09.03 4.73.23v.05Zm.03-2.04a21.37 21.37 0 0 0-4.37-.36c-5.32 0-7.82 1.25-7.82 4.18 0 3.04 1.71 4.2 5.68 4.2 3.35 0 5.63-.84 6.46-2.92h.14c-.03.5-.05 1-.05 1.4 0 1.07.18 1.16 1.06 1.16h4.15a16.9 16.9 0 0 1-.36-4c0-1.67.06-2.93.06-4.62 0-3.45-2.07-5.64-8.56-5.64-2.8 0-5.9.48-8.26 1.19.22.93.54 2.83.7 4.06 2.04-.96 4.95-1.37 7.2-1.37 3.11 0 3.97.71 3.97 2.15v.57Zm11.37 3c-.56.07-1.33.07-2.12.07-.83 0-1.6-.03-2.12-.1l-.02.58c0 2.85 1.87 4.52 8.45 4.52 6.2 0 8.2-1.64 8.2-4.55 0-2.74-1.33-4.09-7.2-4.39-4.58-.2-4.99-.7-4.99-1.28 0-.66.59-1 3.65-1 3.18 0 4.03.43 4.03 1.35v.2a46.13 46.13 0 0 1 4.24.03l.02-.55c0-3.36-2.8-4.46-8.2-4.46-6.08 0-8.13 1.49-8.13 4.39 0 2.6 1.64 4.23 7.48 4.48 4.3.14 4.77.62 4.77 1.28 0 .7-.7 1.03-3.71 1.03-3.47 0-4.35-.48-4.35-1.47v-.13Zm19.82-12.05a17.5 17.5 0 0 1-6.24 3.48c.03.84.03 2.4.03 3.24l1.5.02c-.02 1.63-.04 3.6-.04 4.9 0 3.04 1.6 5.32 6.58 5.32 2.1 0 3.5-.23 5.23-.6a43.77 43.77 0 0 1-.46-4.13c-1.03.34-2.34.53-3.78.53-2 0-2.82-.55-2.82-2.13 0-1.37 0-2.65.03-3.84 2.57.02 5.13.07 6.64.11-.02-1.18.03-2.9.1-4.04-2.2.04-4.65.07-6.68.07l.07-2.93h-.16Zm13.46 6.04a767.33 767.33 0 0 1 .07-3.18H82.6c.07 1.96.07 3.98.07 6.92 0 2.95-.03 4.99-.07 6.93h5.18c-.09-1.37-.11-3.68-.11-5.65 0-3.1 1.26-4 4.12-4 1.33 0 2.28.16 3.1.46.03-1.16.26-3.43.4-4.43-.86-.25-1.81-.41-2.96-.41-2.46-.03-4.26.98-5.1 3.38l-.17-.02Zm22.55 3.65c0 2.5-1.8 3.66-4.64 3.66-2.81 0-4.61-1.1-4.61-3.66s1.82-3.52 4.61-3.52c2.82 0 4.64 1.03 4.64 3.52Zm4.71-.11c0-4.96-3.87-7.18-9.35-7.18-5.5 0-9.23 2.22-9.23 7.18 0 4.94 3.49 7.59 9.21 7.59 5.77 0 9.37-2.65 9.37-7.6Z"/><defs><linearGradient id="a" x1="6.33" x2="19.43" y1="40.8" y2="34.6" gradientUnits="userSpaceOnUse"><stop stop-color="#D83333"/><stop offset="1" stop-color="#F041FF"/></linearGradient></defs></svg>{{/if}}
+      </div>
+      <div class="content">
+        <div class="time-display">
+          <div class="time-group extend" id="time-days">
+            <div class="time-value">-</div>
+            <div class="time-value">-</div>
+            <div class="time-value">-</div>
+            <div class="time-caption">DAYS</div>
+          </div>
+          <div class="time-group" id="time-hours">
+            <div class="time-value">-</div>
+            <div class="time-value">-</div>
+            <div class="time-caption">Hours</div>
+          </div>
+          <div class="time-group" id="time-minutes">
+            <div class="time-value">-</div>
+            <div class="time-value">-</div>
+            <div class="time-caption">Minutes</div>
+          </div>
+          <div class="time-group" id="time-seconds">
+            <div class="time-value">-</div>
+            <div class="time-value">-</div>
+            <div class="time-caption">Seconds</div>
+          </div>
+        </div>
+        <h1 class="title">{{title}}</h1>
+        <p>{{description}}</p>
+        {{#if emailAddress}}
+          <p>{{emailText}} <a href="mailto:{{emailAddress}}">{{emailAddress}}</a></p>
+        {{/if}}
+      </div>
+      <div class="copyright">
+        {{#if copyright}}{{copyright}}{{/if}} {{#if countdown}}All times in UTC{{/if}}
+      </div>
+    </main>
+    <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1024" fill="none" class="background"><path fill="url(#a)" fill-rule="evenodd" d="M-217.58 475.75c91.82-72.02 225.52-29.38 341.2-44.74C240 415.56 372.33 315.14 466.77 384.9c102.9 76.02 44.74 246.76 90.31 366.31 29.83 78.24 90.48 136.14 129.48 210.23 57.92 109.99 169.67 208.23 155.9 331.77-13.52 121.26-103.42 264.33-224.23 281.37-141.96 20.03-232.72-220.96-374.06-196.99-151.7 25.73-172.68 330.24-325.85 315.72-128.6-12.2-110.9-230.73-128.15-358.76-12.16-90.14 65.87-176.25 44.1-264.57-26.42-107.2-167.12-163.46-176.72-273.45-10.15-116.29 33.01-248.75 124.87-320.79Z" clip-rule="evenodd" style="opacity:.154"/><path fill="url(#b)" fill-rule="evenodd" d="M1103.43 115.43c146.42-19.45 275.33-155.84 413.5-103.59 188.09 71.13 409 212.64 407.06 413.88-1.94 201.25-259.28 278.6-414.96 405.96-130 106.35-240.24 294.39-405.6 265.3-163.7-28.8-161.93-274.12-284.34-386.66-134.95-124.06-436-101.46-445.82-284.6-9.68-180.38 247.41-246.3 413.54-316.9 101.01-42.93 207.83 21.06 316.62 6.61Z" clip-rule="evenodd" style="opacity:.154"/><defs><linearGradient id="b" x1="373" x2="1995.44" y1="1100" y2="118.03" gradientUnits="userSpaceOnUse"><stop stop-color="#D83333"/><stop offset="1" stop-color="#F041FF"/></linearGradient><linearGradient id="a" x1="107.37" x2="1130.66" y1="1993.35" y2="1026.31" gradientUnits="userSpaceOnUse"><stop stop-color="#3245FF"/><stop offset="1" stop-color="#BC52EE"/></linearGradient></defs></svg> 
+    <script>
+      const end = new Date("{{countdown}}").getTime();
+      
+      // Get references to all the digit containers
+      const daysGroup = document.getElementById("time-days");
+      const dayDigits = daysGroup.querySelectorAll(".time-value");
+      
+      const hoursGroup = document.getElementById("time-hours");
+      const hourDigits = hoursGroup.querySelectorAll(".time-value");
+      
+      const minutesGroup = document.getElementById("time-minutes");
+      const minuteDigits = minutesGroup.querySelectorAll(".time-value");
+      
+      const secondsGroup = document.getElementById("time-seconds");
+      const secondDigits = secondsGroup.querySelectorAll(".time-value");
+      
+      // Helper function to update digits with proper padding
+      function updateDigits(element, digits, value) {
+        // Convert value to string and pad with leading zeros
+        const valueStr = value.toString().padStart(digits.length, '0');
+        
+        // Check if we need to remove the 'extend' class for days (when days < 100)
+        if (element.id === "time-days" && value < 100) {
+          element.classList.remove("extend");
+        } else if (element.id === "time-days" && value >= 100) {
+          element.classList.add("extend");
+        }
+        
+        // Update each digit
+        for (let i = 0; i < digits.length; i++) {
+          // For days, if we have fewer than 100 days, don't show the first digit (keep it empty)
+          if (element.id === "time-days" && value < 100 && i === 0) {
+            digits[i].style.display = "none";
+          } else {
+            digits[i].style.display = "block";
+            // Get the appropriate digit from the value string
+            digits[i].textContent = valueStr[valueStr.length - digits.length + i];
+          }
+        }
+      }
+      
+      const timer = setInterval(() => {
+        const now = Date.now();
+        const diff = end - now;
+        
+        if (diff <= 0) {
+          // Countdown finished
+          clearInterval(timer);
+          
+          // Set all digits to zero
+          updateDigits(daysGroup, dayDigits, 0);
+          updateDigits(hoursGroup, hourDigits, 0);
+          updateDigits(minutesGroup, minuteDigits, 0);
+          updateDigits(secondsGroup, secondDigits, 0);
+          
+          // Attempt to reload the page every 10 seconds until maintenance mode is disabled
+          // This handles cases where there might be a time mismatch between client and server
+          const attemptReload = () => {
+            console.log('Maintenance countdown complete - attempting to reload page');
+            location.reload();
+            
+            // Set up the next retry in 10 seconds if this page is still shown
+            setTimeout(() => {
+              if (document.getElementById('time-days')) {
+                attemptReload();
+              }
+            }, 10000);
+          };
+          
+          // Initial 10-second delay before first reload attempt
+          setTimeout(attemptReload, 10000);
+        } else {
+          // Calculate time components
+          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+          
+          // Update the digits for each time component
+          updateDigits(daysGroup, dayDigits, days);
+          updateDigits(hoursGroup, hourDigits, hours);
+          updateDigits(minutesGroup, minuteDigits, minutes);
+          updateDigits(secondsGroup, secondDigits, seconds);
+        }
+      }, 1000);
+    </script>
+  </body>
+</html>

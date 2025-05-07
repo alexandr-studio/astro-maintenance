@@ -1,0 +1,39 @@
+{
+  "name": "astro-maintenance",
+  "version": "0.1.0",
+  "description": "Maintenance and Coming Soon integration for Astro",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "keywords": [
+    "astro",
+    "maintenance",
+    "coming soon",
+    "integration",
+    "plugin"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.15.12",
+    "astro": "^5.7.9",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.8"
+  },
+  "scripts": {
+    "build": "tsc && npm run copy-templates",
+    "copy-templates": "mkdir -p dist/templates && cp -r src/templates/*.hbs dist/templates/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "dist/",
+    "README.md"
+  ]
+}
