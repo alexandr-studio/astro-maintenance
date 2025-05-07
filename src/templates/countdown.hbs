@@ -37,6 +37,7 @@
 
       p {
         font-size: 1.4em;
+        line-height: 1.5;
         color: var(--muted);
       }
 
@@ -47,8 +48,6 @@
 
       main > div {
         text-align: center;
-        padding-top: 2rem;
-        padding-bottom: 2rem;
       }
 
       .content {
@@ -168,10 +167,11 @@
           </div>
         </div>
         <h1 class="title">{{title}}</h1>
-        <p>{{description}}</p>
+        <p>{{description}}
         {{#if emailAddress}}
-          <p>{{emailText}} <a href="mailto:{{emailAddress}}">{{emailAddress}}</a></p>
+        <br>{{emailText}} <a href="mailto:{{emailAddress}}">{{emailAddress}}</a>
         {{/if}}
+        </p>
       </div>
       <div class="copyright">
         {{#if copyright}}{{copyright}}{{/if}} {{#if countdown}}All times in UTC{{/if}}

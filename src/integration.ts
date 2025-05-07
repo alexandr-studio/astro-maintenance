@@ -25,12 +25,20 @@ export function maintenance(
         if (!options.enabled) return;
 
         server.middlewares.use((req: IncomingMessage, res: ServerResponse, next) => {
+          const allowedPaths = ["/assets", "/favicon", "/logo"];
+          let isCustomPath = false;
+          // Check if template is an internal route path (starts with '/')
+          // This allows redirecting to another page within the Astro site
+          // Ensure it's not a file path
+          if (options.template && typeof options.template === 'string' && 
+            options.template.startsWith('/') && 
+            !options.template.includes('.')) { 
+              isCustomPath = true;
+              allowedPaths.push(options.template);
+          }
+
           // Allow static assets and favicon to pass through
-          if (
-            req.url?.startsWith("/assets") ||
-            req.url?.startsWith("/favicon") ||
-            req.url?.startsWith("/logo")
-          ) {
+          if (allowedPaths.some(path => req.url?.startsWith(path))) {
             return next();
           }
 
@@ -48,6 +56,13 @@ export function maintenance(
             if (countdownDate <= now) {
               return next();
             }
+          }
+          
+          // If is Custom Path, redirect to the custom path
+          if (isCustomPath) {
+            res.writeHead(302, { 'Location': options.template });
+            res.end();
+            return;
           }
 
           const html = renderPage(options);
