@@ -2,6 +2,11 @@ import type { MaintenanceOptions } from "./index";
 import Handlebars from "handlebars";
 import path from "path";
 import fs from "fs";
+import { fileURLToPath } from "url";
+
+// Get the directory name equivalent of __dirname in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Register helpers for Handlebars
 Handlebars.registerHelper(
