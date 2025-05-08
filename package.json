@@ -1,6 +1,6 @@
 {
   "name": "astro-maintenance",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "description": "Maintenance and Coming Soon integration for Astro",
   "type": "module",
   "exports": {
