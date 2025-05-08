@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      astro-maintenance:
+        specifier: file:astro-maintenance-1.0.0.tgz
+        version: file:astro-maintenance-1.0.0.tgz(astro@5.7.10(@types/node@22.15.12)(rollup@4.40.1)(typescript@5.8.3))
       handlebars:
         specifier: ^4.7.8
         version: 4.7.8
@@ -518,6 +521,13 @@ packages:
 
   array-iterate@2.0.1:
     resolution: {integrity: sha512-I1jXZMjAgCMmxT4qxXfPXa6SthSoE8h6gkSI9BGGNv8mP8G/v0blc+qFnZu6K42vTOiuME596QaLO0TP3Lk0xg==}
+
+  astro-maintenance@file:astro-maintenance-1.0.0.tgz:
+    resolution: {integrity: sha512-WDtfJNrLh98xW2YUyWmwIxu/Q4o6nsPT1lJuHJDR+1v1GppJ86oTmZhZtOXlwf5UWTocfPOBQJwn0UJpg1LOzw==, tarball: file:astro-maintenance-1.0.0.tgz}
+    version: 1.0.0
+    engines: {node: ^18.17.1 || ^20.3.0 || >=21.0.0}
+    peerDependencies:
+      astro: ^5.0.0
 
   astro@5.7.10:
     resolution: {integrity: sha512-9TQcFZqP2w6//JXXUHfw8/5PX7KUx9EkG5O3m+hISuyeUztvjY1q5+p7+C5HiXyg24Zs3KkpieoL5BGRXGCAGA==}
@@ -1855,6 +1865,11 @@ snapshots:
   aria-query@5.3.2: {}
 
   array-iterate@2.0.1: {}
+
+  astro-maintenance@file:astro-maintenance-1.0.0.tgz(astro@5.7.10(@types/node@22.15.12)(rollup@4.40.1)(typescript@5.8.3)):
+    dependencies:
+      astro: 5.7.10(@types/node@22.15.12)(rollup@4.40.1)(typescript@5.8.3)
+      handlebars: 4.7.8
 
   astro@5.7.10(@types/node@22.15.12)(rollup@4.40.1)(typescript@5.8.3):
     dependencies:

@@ -1,39 +1,51 @@
-import type { MaintenanceOptions } from "./integration";
+import type { MaintenanceOptions } from "./index";
 import Handlebars from "handlebars";
 import path from "path";
 import fs from "fs";
 
 // Register helpers for Handlebars
-Handlebars.registerHelper('ifCond', function(this: any, v1: any, operator: string, v2: any, options: Handlebars.HelperOptions) {
-  switch (operator) {
-    case '==':
-      return (v1 == v2) ? options.fn(this) : options.inverse(this);
-    case '===':
-      return (v1 === v2) ? options.fn(this) : options.inverse(this);
-    case '!=':
-      return (v1 != v2) ? options.fn(this) : options.inverse(this);
-    case '!==':
-      return (v1 !== v2) ? options.fn(this) : options.inverse(this);
-    case '<':
-      return (v1 < v2) ? options.fn(this) : options.inverse(this);
-    case '<=':
-      return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-    case '>':
-      return (v1 > v2) ? options.fn(this) : options.inverse(this);
-    case '>=':
-      return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-    default:
-      return options.inverse(this);
-  }
-});
+Handlebars.registerHelper(
+  "ifCond",
+  function (
+    this: any,
+    v1: any,
+    operator: string,
+    v2: any,
+    options: Handlebars.HelperOptions,
+  ) {
+    switch (operator) {
+      case "==":
+        return v1 == v2 ? options.fn(this) : options.inverse(this);
+      case "===":
+        return v1 === v2 ? options.fn(this) : options.inverse(this);
+      case "!=":
+        return v1 != v2 ? options.fn(this) : options.inverse(this);
+      case "!==":
+        return v1 !== v2 ? options.fn(this) : options.inverse(this);
+      case "<":
+        return v1 < v2 ? options.fn(this) : options.inverse(this);
+      case "<=":
+        return v1 <= v2 ? options.fn(this) : options.inverse(this);
+      case ">":
+        return v1 > v2 ? options.fn(this) : options.inverse(this);
+      case ">=":
+        return v1 >= v2 ? options.fn(this) : options.inverse(this);
+      default:
+        return options.inverse(this);
+    }
+  },
+);
 
 // Path to built-in templates
-const templatesDir = path.join(__dirname, 'templates');
+const templatesDir = path.join(__dirname, "templates");
 
 // Helper function to load a template file
 function loadBuiltInTemplate(templateName: string): string {
   try {
-    return fs.readFileSync(path.join(templatesDir, `${templateName}.hbs`), 'utf-8');
+    return fs.readFileSync(
+      path.join(templatesDir, `${templateName}.hbs`),
+      "utf-8",
+    );
   } catch (error) {
     console.error(`Error loading built-in template ${templateName}: ${error}`);
     // Provide a simple fallback template in case of errors
@@ -57,7 +69,9 @@ function loadBuiltInTemplate(templateName: string): string {
 const compiledTemplates: Record<string, Handlebars.TemplateDelegate> = {};
 
 // Get or compile a built-in template
-function getCompiledTemplate(templateName: string): Handlebars.TemplateDelegate {
+function getCompiledTemplate(
+  templateName: string,
+): Handlebars.TemplateDelegate {
   if (!compiledTemplates[templateName]) {
     const templateSource = loadBuiltInTemplate(templateName);
     compiledTemplates[templateName] = Handlebars.compile(templateSource);
@@ -66,10 +80,12 @@ function getCompiledTemplate(templateName: string): Handlebars.TemplateDelegate 
 }
 
 // Helper to try to load a custom template
-function loadCustomTemplate(templatePath: string): Handlebars.TemplateDelegate | null {
+function loadCustomTemplate(
+  templatePath: string,
+): Handlebars.TemplateDelegate | null {
   try {
     if (fs.existsSync(templatePath)) {
-      const templateContent = fs.readFileSync(templatePath, 'utf-8');
+      const templateContent = fs.readFileSync(templatePath, "utf-8");
       return Handlebars.compile(templateContent);
     }
   } catch (error) {
@@ -98,21 +114,24 @@ export default function renderPage(options: MaintenanceOptions) {
     copyright,
     emailAddress,
     emailText,
-    countdown
+    countdown,
   };
 
   // Check if a custom template path is provided as absolute path
-  if (typeof template === 'string' && template.startsWith('/')) {
+  if (typeof template === "string" && template.startsWith("/")) {
     const customTemplate = loadCustomTemplate(template);
     if (customTemplate) {
       return customTemplate(templateData);
     }
     // Fallback to simple template if custom template can't be loaded
-    return getCompiledTemplate('simple')(templateData);
+    return getCompiledTemplate("simple")(templateData);
   }
 
   // Check if it's a relative path
-  if (typeof template === 'string' && (template.startsWith('./') || template.startsWith('../'))) {
+  if (
+    typeof template === "string" &&
+    (template.startsWith("./") || template.startsWith("../"))
+  ) {
     try {
       const rootDir = process.cwd();
       const fullPath = path.resolve(rootDir, template);
@@ -126,12 +145,12 @@ export default function renderPage(options: MaintenanceOptions) {
   }
 
   // Use built-in templates
-  if (template === 'countdown' && countdown) {
-    return getCompiledTemplate('countdown')(templateData);
-  } else if (template === 'construction') {
-    return getCompiledTemplate('construction')(templateData);
+  if (template === "countdown" && countdown) {
+    return getCompiledTemplate("countdown")(templateData);
+  } else if (template === "construction") {
+    return getCompiledTemplate("construction")(templateData);
   } else {
     // Default to simple
-    return getCompiledTemplate('simple')(templateData);
+    return getCompiledTemplate("simple")(templateData);
   }
 }

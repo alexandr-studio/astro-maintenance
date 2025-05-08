@@ -11,28 +11,48 @@
     }
   },
   "keywords": [
+    "withastro",
+    "astro-integration",
     "astro",
     "maintenance",
     "coming soon",
     "integration",
-    "plugin",
     "countdown",
-    "under construction"
+    "under construction",
+    "utils"
   ],
-  "author": "Alexander Vu",
+  "author": "Alexander Sedeke",
   "license": "MIT",
+  "funding": "https://alexandr.studio",
   "devDependencies": {
     "@types/node": "^22.15.12",
     "astro": "^5.7.9",
     "typescript": "^5.0.0"
   },
+  "peerDependencies": {
+    "astro": "^5.0.0"
+  },
   "dependencies": {
+    "astro-maintenance": "file:astro-maintenance-1.0.0.tgz",
     "handlebars": "^4.7.8"
   },
+  "engines": {
+    "node": "^18.17.1 || ^20.3.0 || >=21.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://astro-maintenance.alexandr.studio/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexandr-studio/astro-maintenance.git",
+    "directory": "packages/astro-maintenance"
+  },
+  "bugs": "https://github.com/alexandr-studio/astro-maintenance/issues",
   "scripts": {
     "build": "tsc && npm run copy-templates",
     "copy-templates": "mkdir -p dist/templates && cp -r src/templates/*.hbs dist/templates/",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"No tests yet\""
   },
   "files": [
     "dist/",
