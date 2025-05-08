@@ -1,5 +1,6 @@
 # Source and development files
 tsconfig.json
+*.png
 
 # Keep assets folder for README.md images
 # assets/
