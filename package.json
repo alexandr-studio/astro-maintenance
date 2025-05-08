@@ -1,14 +1,10 @@
 {
   "name": "astro-maintenance",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1",
   "description": "Maintenance and Coming Soon integration for Astro",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "type": "module",
   "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
+    ".": "./index.ts"
   },
   "keywords": [
     "withastro",
@@ -23,17 +19,14 @@
   ],
   "author": "Alexander Sedeke",
   "license": "MIT",
-  "funding": "https://alexandr.studio",
   "devDependencies": {
-    "@types/node": "^22.15.12",
-    "astro": "^5.7.9",
-    "typescript": "^5.0.0"
+    "@types/node": "^22.15.17",
+    "astro": "^5.7.9"
   },
   "peerDependencies": {
     "astro": "^5.0.0"
   },
   "dependencies": {
-    "astro-maintenance": "file:astro-maintenance-1.0.0.tgz",
     "handlebars": "^4.7.8"
   },
   "engines": {
@@ -45,18 +38,21 @@
   "homepage": "https://astro-maintenance.alexandr.studio/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/alexandr-studio/astro-maintenance.git",
+    "url": "git+https://github.com/alexandr-studio/astro-maintenance.git",
     "directory": "packages/astro-maintenance"
   },
   "bugs": "https://github.com/alexandr-studio/astro-maintenance/issues",
-  "scripts": {
-    "build": "tsc && npm run copy-templates",
-    "copy-templates": "mkdir -p dist/templates && cp -r src/templates/*.hbs dist/templates/",
-    "test": "echo \"No tests yet\""
-  },
   "files": [
-    "dist/",
+    "package.json",
     "README.md",
-    "assets/"
+    "index.ts",
+    "renderPage.ts",
+    "templates/simple.hbs",
+    "templates/countdown.hbs",
+    "templates/construction.hbs",
+    "assets/astro-maintenance.webp",
+    "assets/simple-preview.webp",
+    "assets/countdown-preview.webp",
+    "assets/construction-preview.webp"
   ]
 }
