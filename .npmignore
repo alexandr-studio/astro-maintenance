@@ -1,7 +1,5 @@
 # Source and development files
-src/
 tsconfig.json
-astro.config.mjs
 
 # Keep assets folder for README.md images
 # assets/
