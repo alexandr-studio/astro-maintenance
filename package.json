@@ -38,8 +38,7 @@
   "homepage": "https://astro-maintenance.alexandr.studio/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexandr-studio/astro-maintenance.git",
-    "directory": "packages/astro-maintenance"
+    "url": "git+https://github.com/alexandr-studio/astro-maintenance.git"
   },
   "bugs": "https://github.com/alexandr-studio/astro-maintenance/issues",
   "files": [

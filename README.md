@@ -1,6 +1,6 @@
 # Astro-Maintenance
 
-![Logo](https://raw.githubusercontent.com/alexandr-studio/astro-maintenance/main/assets/astro-maintenance.webp)
+<img src="/assets/astro-maintenance.webp" alt="Astro Maintenance integration"/>
 
 The main purpose of the integration is to provide a **simple way** to add **maintenance** and **coming soon** pages to Astro projects during development or scheduled maintenance periods. It should be easy to use and highly customizable.
 
@@ -87,7 +87,7 @@ maintenance({
 
 ##### Preview - Basic Maintenance Page
 
-![Logo](https://raw.githubusercontent.com/alexandr-studio/astro-maintenance/main/assets/simple-preview.webp)
+<img src="/assets/simple-preview.webp" alt="Simple template preview"/>
 
 ### Countdown Timer
 
@@ -110,7 +110,7 @@ maintenance({
 
 ##### Preview - Countdown Timer
 
-![Logo](https://raw.githubusercontent.com/alexandr-studio/astro-maintenance/main/assets/countdown-preview.webp)
+<img src="/assets/countdown-preview.webp" alt="Countdown template preview"/>
 
 ### Under Construction
 
@@ -126,7 +126,7 @@ maintenance({
 
 ##### Preview - Under Construction
 
-![Logo](https://raw.githubusercontent.com/alexandr-studio/astro-maintenance/main/assets/construction-preview.webp)
+<img src="/assets/construction-preview.webp" alt="Construction template preview"/>
 
 ### Internal Route Redirection
 
