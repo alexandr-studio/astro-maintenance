@@ -4,6 +4,8 @@
 
 The main purpose of the integration is to provide a **simple way** to add **maintenance** and **coming soon** pages to Astro projects during development or scheduled maintenance periods. It should be easy to use and highly customizable.
 
+> **⚠️ IMPORTANT:** This integration only works when Astro is in **server mode** (`output: 'server'`). It will not function with static site generation (`output: 'static'`) as it relies on server middleware to intercept requests.
+
 ### Features
 
 - Predefined templates (simple, countdown, construction)
@@ -14,6 +16,8 @@ The main purpose of the integration is to provide a **simple way** to add **main
 - Automatic disabling of maintenance mode when countdown ends
 - Auto-reload functionality that checks every 10 seconds after countdown ends
 - Override query parameter to bypass the maintenance page and inspect the site
+- Cookie-based override persistence to bypass maintenance page on subsequent visits
+- Cookie deletion when the integration is deactivated or when using override with 'reset' value
 
 ## Installation
 
@@ -67,6 +71,8 @@ The integration accepts the following configuration options:
 | `copyright`    | `string`                                              | Copyright text                                                                               | -        |
 | `countdown`    | `string`                                              | ISO date string for countdown timer in UTC (e.g., `'2025-12-31T23:59:59'`)                   | -        |
 | `override`     | `string`                                              | Query parameter to bypass maintenance mode (e.g., `'preview'`)                               | -        |
+| `cookieName`   | `string`                                              | Name of the cookie used for override persistence (default: `'astro_maintenance_override'`)   | -        |
+| `cookieMaxAge` | `number`                                              | Max age of the override cookie in seconds (default: `604800` - 7 days)                       | -        |
 
 ## Examples
 
@@ -82,6 +88,8 @@ maintenance({
   emailText: "Need assistance? Contact us at:",
   copyright: " 2025 Your Company",
   override: "preview", // Access your site with ?preview in the URL
+  cookieName: "my_override_cookie", // Optional: custom cookie name
+  cookieMaxAge: 86400, // Optional: cookie expires after 24 hours (in seconds)
 });
 ```
 
@@ -127,6 +135,27 @@ maintenance({
 ##### Preview - Under Construction
 
 <img src="/assets/construction-preview.webp" alt="Construction template preview"/>
+
+### Cookie-Based Override Persistence
+
+The integration now supports cookie-based persistence for the override parameter. When a user accesses the site with the override parameter (e.g., `?preview`), a secure HttpOnly cookie is set that allows them to bypass the maintenance page on subsequent visits without needing to use the override parameter each time.
+
+```js
+maintenance({
+  enabled: true,
+  template: "simple",
+  override: "preview",
+  cookieName: "my_custom_cookie", // Optional: defaults to "astro_maintenance_override"
+  cookieMaxAge: 3600, // Optional: cookie expiration in seconds, defaults to 7 days
+});
+```
+
+#### Resetting the Override Cookie
+
+The override cookie can be reset in any of the following ways:
+
+1. Adding `=reset` to the override parameter (e.g., `?preview=reset`)
+2. Disabling the maintenance integration (`enabled: false`)
 
 ### Internal Route Redirection
 
