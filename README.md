@@ -1,7 +1,5 @@
 # Astro-Maintenance
 
-![Astro Maintenance integration](https://github.com/alexandr-studio/astro-maintenance/raw/main/assets/astro-maintenance.webp)
-
 The main purpose of the integration is to provide a **simple way** to add **maintenance** and **coming soon** pages to Astro projects during development or scheduled maintenance periods. It should be easy to use and highly customizable.
 
 > **⚠️ IMPORTANT:** This integration only works when Astro is in **server mode** (`output: 'server'`). It will not function with static site generation (`output: 'static'`) as it relies on server middleware to intercept requests.
@@ -97,8 +95,6 @@ maintenance({
 
 ##### Preview - Basic Maintenance Page
 
-![Simple template preview](https://github.com/alexandr-studio/astro-maintenance/raw/main/assets/simple-preview.webp)
-
 ### Countdown Timer
 
 ```js
@@ -120,8 +116,6 @@ maintenance({
 
 ##### Preview - Countdown Timer
 
-![Countdown template preview](https://github.com/alexandr-studio/astro-maintenance/raw/main/assets/countdown-preview.webp)
-
 ### Under Construction
 
 ```js
@@ -135,8 +129,6 @@ maintenance({
 ```
 
 ##### Preview - Under Construction
-
-![Construction template preview](https://github.com/alexandr-studio/astro-maintenance/raw/main/assets/construction-preview.webp)
 
 ### Cookie-Based Override Persistence
 
