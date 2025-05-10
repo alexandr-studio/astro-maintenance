@@ -6,6 +6,8 @@ The main purpose of the integration is to provide a **simple way** to add **main
 
 > **⚠️ IMPORTANT:** This integration only works when Astro is in **server mode** (`output: 'server'`). It will not function with static site generation (`output: 'static'`) as it relies on server middleware to intercept requests.
 
+📚 **Detailed Documentation:** For comprehensive guides and examples, visit [https://astro-maintenance.alexandr.studio/](https://astro-maintenance.alexandr.studio/)
+
 ### Features
 
 - Predefined templates (simple, countdown, construction)
