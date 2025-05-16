@@ -74,6 +74,23 @@ The integration accepts the following configuration options:
 | `cookieName`   | `string`                                              | Name of the cookie used for override persistence (default: `'astro_maintenance_override'`)   | -        |
 | `cookieMaxAge` | `number`                                              | Max age of the override cookie in seconds (default: `604800` - 7 days)                       | -        |
 
+## Compatibility
+
+The `astro-maintenance` integration supports middleware across various deployment platforms:
+
+## Supported Deployment Targets
+
+| Platform        | Runtime             | Middleware Support | Notes                                                                 |
+|-----------------|---------------------|--------------------|-----------------------------------------------------------------------|
+| **Astro Dev**   | Node.js server      | ✅ Yes             | Default for `pnpm dev`; middleware is active                         |
+| **Node (standalone)** | Node.js SSR       | ✅ Yes             | Middleware is bundled into `entry.mjs` and works when self-hosted    |
+| **Node (middleware)** | Node.js SSR       | ✅ Yes             | Middleware is registered into existing Node app                      |
+| **Vercel**      | Serverless Functions | ✅ Yes             | Middleware is bundled into per-route functions                       |
+| **Vercel Edge** | Edge Runtime         | ⚠️ Not officially tested | Requires edge-compatible code and explicit setup                     |
+| **Netlify**     | Serverless Functions | ✅ Yes             | Middleware runs in each function just like Vercel                    |
+| **Cloudflare**  | Edge Runtime         | ✅ Yes             | Works when using `@astrojs/cloudflare` adapter                       |
+| **Static Output** | N/A               | ❌ No              | Middleware is not supported in `output: "static"` mode               |
+
 ## Examples
 
 ### Basic Maintenance Page
