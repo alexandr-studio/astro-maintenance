@@ -39,20 +39,19 @@
   "homepage": "https://astro-maintenance.alexandr.studio/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexandr-studio/astro-maintenance.git"
+    "url": "https://github.com/alexandr-studio/astro-maintenance.git"
   },
   "bugs": "https://github.com/alexandr-studio/astro-maintenance/issues",
   "files": [
     "package.json",
     "README.md",
     "index.ts",
+    "middleware.ts",
     "renderPage.ts",
+    "cookieHandler.ts",
     "templates/simple.hbs",
     "templates/countdown.hbs",
     "templates/construction.hbs",
-    "assets/astro-maintenance.webp",
-    "assets/simple-preview.webp",
-    "assets/countdown-preview.webp",
-    "assets/construction-preview.webp"
+    "assets/astro-maintenance.webp"
   ]
 }

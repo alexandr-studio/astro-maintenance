@@ -4,9 +4,10 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 
-// Get the directory name equivalent of __dirname in ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Use ?raw to import file content as string
+import simpleTemplateSource from "./templates/simple.hbs?raw";
+import countdownTemplateSource from "./templates/countdown.hbs?raw";
+import constructionTemplateSource from "./templates/construction.hbs?raw";
 
 // Register helpers for Handlebars
 Handlebars.registerHelper(
@@ -42,7 +43,12 @@ Handlebars.registerHelper(
 );
 
 // Path to built-in templates
-const templatesDir = path.join(__dirname, "templates");
+const templatesDir = fileURLToPath(new URL("./templates", import.meta.url));
+const builtInTemplates: Record<string, string> = {
+  simple: simpleTemplateSource,
+  countdown: countdownTemplateSource,
+  construction: constructionTemplateSource,
+};
 
 // Helper function to load a template file
 function loadBuiltInTemplate(templateName: string): string {
@@ -78,8 +84,9 @@ function getCompiledTemplate(
   templateName: string,
 ): Handlebars.TemplateDelegate {
   if (!compiledTemplates[templateName]) {
-    const templateSource = loadBuiltInTemplate(templateName);
-    compiledTemplates[templateName] = Handlebars.compile(templateSource);
+    const source =
+      builtInTemplates[templateName] ?? loadBuiltInTemplate(templateName);
+    compiledTemplates[templateName] = Handlebars.compile(source);
   }
   return compiledTemplates[templateName];
 }
