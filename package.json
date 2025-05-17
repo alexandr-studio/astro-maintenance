@@ -20,6 +20,7 @@
   "author": "Alexander Sedeke",
   "license": "MIT",
   "devDependencies": {
+    "@playwright/test": "^1.52.0",
     "@types/node": "^22.15.17",
     "astro": "^5.7.12"
   },
@@ -53,5 +54,6 @@
     "templates/countdown.hbs",
     "templates/construction.hbs",
     "assets/astro-maintenance.webp"
-  ]
+  ],
+  "scripts": {}
 }
