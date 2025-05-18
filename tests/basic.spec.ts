@@ -22,8 +22,9 @@ async function savePageContent(name: string, content: string) {
     await fs.mkdir(debugDir, { recursive: true });
     await fs.writeFile(path.join(debugDir, `${name}.html`), content);
     console.log(`Saved ${name} content to ${debugDir}`);
-  } catch (err) {
-    console.error(`Failed to save debug content: ${err.message}`);
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    console.error(`Failed to save debug content: ${errorMessage}`);
   }
 }
 

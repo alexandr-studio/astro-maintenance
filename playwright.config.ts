@@ -88,5 +88,5 @@ export default defineConfig({
 
   /* We're handling server startup in the tests themselves */
   /* because we need to modify configuration between tests */
-  webServer: null,
+  // webServer property is omitted entirely
 });
