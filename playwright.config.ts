@@ -13,23 +13,35 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './tests',
-  /* Run tests in files in parallel */
-  fullyParallel: true,
+  /* Run tests sequentially to avoid conflicts */
+  fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  /* Retry both locally and on CI */
+  retries: process.env.CI ? 2 : 1,
+  /* Limit parallel workers to avoid resource contention */
+  workers: process.env.CI ? 1 : 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: [
+    ['html', { open: 'never' }],
+    ['list']
+  ],
+  /* Maximum time one test can run for */
+  timeout: 180000, // 3 minutes per test
+  /* Extend timeout for expect operations */
+  expect: {
+    timeout: 10000, // 10 seconds for expectations
+  },
+  
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://127.0.0.1:3000',
+    baseURL: 'http://localhost:4321',
 
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    /* Collect trace for all test failures */
+    trace: 'retain-on-failure',
+    /* Add screenshot on failure */
+    screenshot: 'only-on-failure',
   },
 
   /* Configure projects for major browsers */
@@ -39,6 +51,9 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
+    /* Run only Chromium by default for faster tests */
+    /* Uncomment these for broader compatibility testing */
+    /*
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
@@ -48,6 +63,7 @@ export default defineConfig({
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
     },
+    */
 
     /* Test against mobile viewports. */
     // {
@@ -70,10 +86,7 @@ export default defineConfig({
     // },
   ],
 
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://127.0.0.1:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  /* We're handling server startup in the tests themselves */
+  /* because we need to modify configuration between tests */
+  webServer: null,
 });

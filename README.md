@@ -234,6 +234,121 @@ If you want to contribute to this project:
 2. Install dependencies: `pnpm install`
 3. Build the package: `pnpm build`
 
+## Testing
+
+The integration includes a comprehensive test suite using Playwright for end-to-end testing. The tests verify the functionality of the maintenance page features in a real Astro environment.
+
+### Running Tests
+
+```bash
+# RECOMMENDED: Run the simple test script (most reliable)
+npm run test:simple
+# or with pnpm
+pnpm test:simple
+
+# Alternative testing methods (Playwright-based, more comprehensive but may be fragile):
+
+# Install Playwright browsers (only needed once)
+npm run install:browsers
+
+# Setup test environment (if needed)
+npm run setup:test
+
+# Run the simplified test
+npm run test -- basic.spec.ts
+
+# Run all tests (may be more fragile)
+npm run test
+
+# Run a specific test by name
+npm run test:single "Test name here"
+
+# Run tests with UI
+npm run test:ui
+
+# Run tests with browser visible
+npm run test:headed
+
+# Run tests in debug mode
+npm run test:debug
+
+# Clean up test environment after running tests
+npm run cleanup:test
+```
+
+### Test Coverage
+
+The test suite includes three approaches:
+
+#### Simple Test Script (`test:simple`)
+The most reliable and straightforward testing method:
+- Uses Node.js directly without Playwright dependencies
+- Creates a minimal Astro project
+- Tests core functionality (maintenance page and bypass parameter)
+- Provides color-coded console output
+
+#### Basic Tests (`basic.spec.ts`)
+A simplified Playwright test that verifies core functionality:
+- Default template rendering
+- Override parameter functionality
+- Cookie-based persistence
+
+#### Comprehensive Tests (`integration.spec.ts`)
+More extensive tests covering:
+- Default template renders correctly
+- Countdown functionality (future and past dates)
+- Override parameter functionality (bypass and reset)
+- Cookie-based access control
+- Custom logo rendering
+- Allowed and disallowed static assets
+- Route-specific behavior
+
+### Test Implementation
+
+#### Basic Test Implementation
+The simplified test:
+1. Creates a minimal project structure in `tests/basic-project`
+2. Installs only the necessary dependencies
+3. Configures a simple maintenance integration
+4. Tests core functionality with minimal setup/teardown
+
+#### Comprehensive Test Implementation
+The full test suite:
+1. Creates a temporary Astro project in `tests/astro-project`
+2. Configures it with the maintenance integration
+3. Builds the project
+4. Starts a local server
+5. Uses Playwright to test different configurations and scenarios
+
+### Extending Tests
+
+If you want to add more tests:
+
+1. For basic functionality, consider adding to `tests/basic.spec.ts`
+2. For comprehensive testing, edit `tests/integration.spec.ts`
+3. Add new test cases following the existing patterns
+4. Run the tests to verify your changes
+
+### Troubleshooting Tests
+
+If you encounter issues running tests:
+
+1. Use the `test:simple` script, which is the most reliable testing method
+   ```bash
+   npm run test:simple
+   # or
+   pnpm test:simple
+   ```
+2. If using Playwright tests:
+   - Try the simplified `basic.spec.ts` test first
+   - Ensure no other services are running on port 4321
+   - Try running tests one at a time with `npm run test:single`
+3. If tests hang, you may need to manually kill Node.js processes
+4. Use `npm run cleanup:test` to reset the test environment
+5. Dependency conflicts can be resolved by using the correct versions:
+   - Use `@astrojs/node@^9.2.1` for compatibility with Astro 5.x
+   - Use `--legacy-peer-deps` flag when installing dependencies
+
 ## License
 
 MIT

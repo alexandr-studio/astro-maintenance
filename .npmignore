@@ -23,7 +23,7 @@ pnpm-workspace.yaml
 **/*.test.ts
 **/*.spec.ts
 test/
-tests/
+tests*/
 
 # CI/CD
 .github/
