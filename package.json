@@ -60,14 +60,7 @@
   ],
   "scripts": {
     "test": "pnpm exec playwright test --workers=1",
-    "test:ui": "pnpm exec playwright test --ui",
-    "test:debug": "pnpm exec playwright test --debug",
-    "test:headed": "pnpm exec playwright test --headed",
-    "test:single": "pnpm exec playwright test -g",
-    "test:basic": "node scripts/run-basic-test.js",
-    "test:simple": "node scripts/test-integration.js",
-    "setup:test": "rm -rf tests/astro-project && mkdir -p tests/astro-project",
-    "cleanup:test": "rm -rf tests/astro-project/*",
+    "cleanup:test": "rm -rf tests/*-project",
     "install:browsers": "pnpm exec playwright install chromium"
   }
 }
