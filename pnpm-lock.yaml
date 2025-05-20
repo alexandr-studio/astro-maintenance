@@ -34,6 +34,15 @@ importers:
         specifier: ^5.4.1
         version: 5.4.1
 
+  tests/environments-project:
+    dependencies:
+      '@astrojs/node':
+        specifier: ^9.2.1
+        version: 9.2.1(astro@5.7.13(@types/node@22.15.19)(rollup@4.40.2)(typescript@5.8.3))
+      astro:
+        specifier: ^5.7.13
+        version: 5.7.13(@types/node@22.15.19)(rollup@4.40.2)(typescript@5.8.3)
+
 packages:
 
   '@astrojs/compiler@2.12.0':

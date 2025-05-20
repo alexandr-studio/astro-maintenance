@@ -22,18 +22,54 @@ const fallbackOptions = {
   cookieMaxAge: 7 * 24 * 60 * 60,
 };
 
-const mergedOptions = {
-  ...fallbackOptions,
-  ...integrationOptions,
-};
+/**
+ * Get merged options from integration and environment variables
+ * Environment variables have precedence over integration options
+ */
+function getOptions() {
+  // First merge defaults with integration options
+  const baseOptions = {
+    ...fallbackOptions,
+    ...integrationOptions,
+  };
+
+  // Then override with environment variables if available
+  return {
+    ...baseOptions,
+    // Boolean options
+    enabled: process.env.MAINTENANCE_ENABLED !== undefined
+      ? process.env.MAINTENANCE_ENABLED === "true"
+      : baseOptions.enabled,
+    
+    // String options
+    template: process.env.MAINTENANCE_TEMPLATE || baseOptions.template,
+    title: process.env.MAINTENANCE_TITLE || baseOptions.title,
+    description: process.env.MAINTENANCE_DESCRIPTION || baseOptions.description,
+    emailAddress: process.env.MAINTENANCE_EMAIL_ADDRESS || baseOptions.emailAddress,
+    emailText: process.env.MAINTENANCE_EMAIL_TEXT || baseOptions.emailText,
+    copyright: process.env.MAINTENANCE_COPYRIGHT || baseOptions.copyright,
+    override: process.env.MAINTENANCE_OVERRIDE || baseOptions.override,
+    logo: process.env.MAINTENANCE_LOGO || baseOptions.logo,
+    countdown: process.env.MAINTENANCE_COUNTDOWN || baseOptions.countdown,
+    
+    // Number options - convert from string to number when from env var
+    cookieMaxAge: process.env.MAINTENANCE_COOKIE_MAX_AGE !== undefined
+      ? parseInt(process.env.MAINTENANCE_COOKIE_MAX_AGE, 10)
+      : baseOptions.cookieMaxAge,
+    
+    // Fixed options - don't override these with env vars for now
+    cookieName: baseOptions.cookieName,
+    allowedPaths: baseOptions.allowedPaths,
+  };
+}
+
+// Get the merged options
+const options = getOptions();
 
 export const onRequest: MiddlewareHandler = async (context, next) => {
   const { request } = context;
 
-  const isEnabled =
-    process.env.MAINTENANCE_ENABLED !== undefined
-      ? process.env.MAINTENANCE_ENABLED === "true"
-      : mergedOptions.enabled;
+  const isEnabled = options.enabled;
 
   if (!isEnabled) {
     return next();
@@ -45,8 +81,8 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
   const allowedPaths = new Set(["/assets", "/favicon", "/logo"]);
 
   // Add user-defined allowedPaths
-  if (Array.isArray(mergedOptions.allowedPaths)) {
-    for (const path of mergedOptions.allowedPaths) {
+  if (Array.isArray(options.allowedPaths)) {
+    for (const path of options.allowedPaths) {
       if (typeof path === "string") {
         allowedPaths.add(path);
       }
@@ -56,14 +92,14 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
   // Handle astro template (e.g. /maintenance)
   let isCustomPath = false;
   if (
-    mergedOptions.template &&
-    typeof mergedOptions.template === "string" &&
-    mergedOptions.template.startsWith("/") &&
-    !mergedOptions.template.includes(".")
+    options.template &&
+    typeof options.template === "string" &&
+    options.template.startsWith("/") &&
+    !options.template.includes(".")
   ) {
     isCustomPath = true;
-    allowedPaths.add(mergedOptions.template);
-    allowedPaths.add(`${mergedOptions.template}/`);
+    allowedPaths.add(options.template);
+    allowedPaths.add(`${options.template}/`);
   }
 
   // Check if request is allowed
@@ -75,26 +111,26 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
   // Check if Cookie allow the request
   const cookies = request.headers.get("cookie") || "";
   const parsedCookies = parseCookies(cookies);
-  const hasOverrideCookie = parsedCookies[mergedOptions.cookieName] === "true";
+  const hasOverrideCookie = parsedCookies[options.cookieName] === "true";
 
   // check if override param is set
   const hasOverrideParam =
-    mergedOptions.override && url.searchParams.has(mergedOptions.override);
+    options.override && url.searchParams.has(options.override);
 
   // check if reset param is set
-  const hasResetParam = mergedOptions.override && url.searchParams.has("reset");
+  const hasResetParam = options.override && url.searchParams.has("reset");
 
   if (hasResetParam) {
     return clearCookieAndRedirect(context, url.pathname.split("?")[0] || "/", [
-      mergedOptions.cookieName,
+      options.cookieName,
     ]);
   }
 
   if (hasOverrideParam) {
     return setCookieAndRedirect(context, "/", {
-      [mergedOptions.cookieName]: "true"
+      [options.cookieName]: "true"
     }, {
-      maxAge: mergedOptions.cookieMaxAge,
+      maxAge: options.cookieMaxAge,
       httpOnly: true,
       secure: true,
       sameSite: "Strict",
@@ -105,8 +141,8 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     return next();
   }
 
-  if (mergedOptions.countdown) {
-    const countdownDate = new Date(mergedOptions.countdown);
+  if (options.countdown) {
+    const countdownDate = new Date(options.countdown);
     if (countdownDate <= new Date()) {
       return next();
     }
@@ -116,12 +152,12 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     return new Response(null, {
       status: 302,
       headers: {
-        Location: mergedOptions.template,
+        Location: options.template,
       },
     });
   }
 
-  const html = renderPage(mergedOptions);
+  const html = renderPage(options);
   return new Response(html, {
     status: 200,
     headers: {

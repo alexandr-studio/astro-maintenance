@@ -125,6 +125,7 @@ export async function stopProcess(serverProcess: any) {
 export async function startBuild(
   projectName: string,
   port: string = "4321",
+  envVars: Record<string, string> = {}
 ): Promise<any> {
   const projectDir = getProjectPath(projectName);
   // Start the server (using spawn instead of exec for better process control)
@@ -132,7 +133,7 @@ export async function startBuild(
     cwd: projectDir,
     detached: false, // This helps with cleanup
     stdio: ["ignore", "pipe", "pipe"], // Redirect stdout and stderr
-    env: { ...process.env, PORT: port }, // Ensure consistent port
+    env: { ...process.env, PORT: port, ...envVars }, // Ensure consistent port and add custom env vars
   });
 
   // Log server output for debugging

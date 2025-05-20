@@ -74,6 +74,43 @@ The integration accepts the following configuration options:
 | `cookieName`   | `string`                                              | Name of the cookie used for override persistence (default: `'astro_maintenance_override'`)   | -        |
 | `cookieMaxAge` | `number`                                              | Max age of the override cookie in seconds (default: `604800` - 7 days)                       | -        |
 
+## Environment Variables
+
+You can override the configuration options using environment variables. This is useful for changing settings in different environments (development, staging, production) without rebuilding your application.
+
+Environment variables take precedence over programmatically defined settings, allowing you to easily modify behavior in containerized deployments or CI/CD pipelines.
+
+| Environment Variable        | Type      | Description                                         |
+| --------------------------- | --------- | --------------------------------------------------- |
+| `MAINTENANCE_ENABLED`       | `boolean` | Enable or disable maintenance mode                  |
+| `MAINTENANCE_TEMPLATE`      | `string`  | Template to use                                     |
+| `MAINTENANCE_TITLE`         | `string`  | Page title                                          |
+| `MAINTENANCE_DESCRIPTION`   | `string`  | Description text                                    |
+| `MAINTENANCE_LOGO`          | `string`  | URL to your logo image                              |
+| `MAINTENANCE_EMAIL_ADDRESS` | `string`  | Contact email address                               |
+| `MAINTENANCE_EMAIL_TEXT`    | `string`  | Text to display before the email address            |
+| `MAINTENANCE_COPYRIGHT`     | `string`  | Copyright text                                      |
+| `MAINTENANCE_COUNTDOWN`     | `string`  | ISO date string for countdown timer                 |
+| `MAINTENANCE_OVERRIDE`      | `string`  | Query parameter to bypass maintenance mode          |
+| `MAINTENANCE_COOKIE_MAX_AGE`| `number`  | Max age of the override cookie in seconds           |
+
+### Example with Environment Variables
+
+```sh
+# Enable maintenance mode with a countdown
+MAINTENANCE_ENABLED=true
+MAINTENANCE_TEMPLATE="countdown"
+MAINTENANCE_TITLE="We're launching soon!"
+MAINTENANCE_COUNTDOWN="2025-12-31T23:59:59"
+```
+
+This approach is particularly useful for:
+
+- Toggling maintenance mode in production without code changes
+- Setting different configurations across environments
+- Deploying containerized applications where rebuilding is costly
+- Managing feature flags in CI/CD pipelines
+
 ## Compatibility
 
 The `astro-maintenance` integration supports middleware across various deployment platforms:
