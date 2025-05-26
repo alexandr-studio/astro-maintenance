@@ -21,6 +21,51 @@ The main purpose of the integration is to provide a **simple way** to add **main
 
 ## Installation
 
+The easiest way to add `astro-maintenance` to your project is using the Astro CLI:
+
+```bash
+# Using pnpm
+pnpm astro add astro-maintenance
+
+# Using npm
+npm run astro add astro-maintenance
+
+# Using yarn
+yarn astro add astro-maintenance
+```
+
+This command automatically installs the integration and adds it to your `astro.config.mjs`.
+
+If you prefer a manual setup or want more control, follow the steps below.
+
+### Manual Install
+
+First, install the package:
+
+```bash
+# npm
+npm install astro-maintenance
+
+# yarn
+yarn add astro-maintenance
+
+# pnpm
+pnpm add astro-maintenance
+```
+
+Then, update your `astro.config.mjs`:
+
+```js
+import { defineConfig } from "astro/config";
+import maintenance from "astro-maintenance";
+
+export default defineConfig({
+  integrations: [maintenance()],
+});
+```
+
+You can pass options to customize the behavior (see below).
+
 ```bash
 # npm
 npm install astro-maintenance
@@ -80,19 +125,19 @@ You can override the configuration options using environment variables. This is 
 
 Environment variables take precedence over programmatically defined settings, allowing you to easily modify behavior in containerized deployments or CI/CD pipelines.
 
-| Environment Variable        | Type      | Description                                         |
-| --------------------------- | --------- | --------------------------------------------------- |
-| `MAINTENANCE_ENABLED`       | `boolean` | Enable or disable maintenance mode                  |
-| `MAINTENANCE_TEMPLATE`      | `string`  | Template to use                                     |
-| `MAINTENANCE_TITLE`         | `string`  | Page title                                          |
-| `MAINTENANCE_DESCRIPTION`   | `string`  | Description text                                    |
-| `MAINTENANCE_LOGO`          | `string`  | URL to your logo image                              |
-| `MAINTENANCE_EMAIL_ADDRESS` | `string`  | Contact email address                               |
-| `MAINTENANCE_EMAIL_TEXT`    | `string`  | Text to display before the email address            |
-| `MAINTENANCE_COPYRIGHT`     | `string`  | Copyright text                                      |
-| `MAINTENANCE_COUNTDOWN`     | `string`  | ISO date string for countdown timer                 |
-| `MAINTENANCE_OVERRIDE`      | `string`  | Query parameter to bypass maintenance mode          |
-| `MAINTENANCE_COOKIE_MAX_AGE`| `number`  | Max age of the override cookie in seconds           |
+| Environment Variable         | Type      | Description                                |
+| ---------------------------- | --------- | ------------------------------------------ |
+| `MAINTENANCE_ENABLED`        | `boolean` | Enable or disable maintenance mode         |
+| `MAINTENANCE_TEMPLATE`       | `string`  | Template to use                            |
+| `MAINTENANCE_TITLE`          | `string`  | Page title                                 |
+| `MAINTENANCE_DESCRIPTION`    | `string`  | Description text                           |
+| `MAINTENANCE_LOGO`           | `string`  | URL to your logo image                     |
+| `MAINTENANCE_EMAIL_ADDRESS`  | `string`  | Contact email address                      |
+| `MAINTENANCE_EMAIL_TEXT`     | `string`  | Text to display before the email address   |
+| `MAINTENANCE_COPYRIGHT`      | `string`  | Copyright text                             |
+| `MAINTENANCE_COUNTDOWN`      | `string`  | ISO date string for countdown timer        |
+| `MAINTENANCE_OVERRIDE`       | `string`  | Query parameter to bypass maintenance mode |
+| `MAINTENANCE_COOKIE_MAX_AGE` | `number`  | Max age of the override cookie in seconds  |
 
 ### Example with Environment Variables
 
