@@ -30,7 +30,6 @@
   },
   "dependencies": {
     "@astrojs/node": "^9.2.1",
-    "astro-maintenance": "link:/Users/alexandervu/Documents/astro-maintenance",
     "cookie": "^1.0.2",
     "handlebars": "^4.7.8"
   },
