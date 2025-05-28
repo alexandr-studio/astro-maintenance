@@ -85,6 +85,32 @@
         color: var(--muted);
       }
 
+      .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+
+      .social-links a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        background-color: var(--accent);
+        color: var(--background);
+        font-size: 1.25rem;
+        text-decoration: none;
+        transition: all 0.2s ease-in-out;
+      }
+
+      .social-links a:hover {
+        transform: translateY(-3px);
+        opacity: 0.9;
+      }
+
       .background {
         position: fixed;
         top: 0;
@@ -123,6 +149,23 @@
           {{description}}
           {{#if emailAddress}}</br>{{emailText}}</br><a href="mailto:{{emailAddress}}">{{emailAddress}}</a>{{/if}}
         </p>
+        {{#if socials}}
+        <div class="social-links">
+          {{#if socials.facebook}}<a href="{{socials.facebook}}" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>{{/if}}
+          {{#if socials.x}}<a href="{{socials.x}}" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">𝕏</a>{{/if}}
+          {{#if socials.instagram}}<a href="{{socials.instagram}}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">i</a>{{/if}}
+          {{#if socials.youtube}}<a href="{{socials.youtube}}" target="_blank" rel="noopener noreferrer" aria-label="YouTube">y</a>{{/if}}
+          {{#if socials.linkedin}}<a href="{{socials.linkedin}}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">in</a>{{/if}}
+          {{#if socials.github}}<a href="{{socials.github}}" target="_blank" rel="noopener noreferrer" aria-label="GitHub">g</a>{{/if}}
+          {{#if socials.mastodon}}<a href="{{socials.mastodon}}" target="_blank" rel="noopener noreferrer" aria-label="Mastodon">m</a>{{/if}}
+          {{#if socials.pinterest}}<a href="{{socials.pinterest}}" target="_blank" rel="noopener noreferrer" aria-label="Pinterest">p</a>{{/if}}
+          {{#if socials.tiktok}}<a href="{{socials.tiktok}}" target="_blank" rel="noopener noreferrer" aria-label="TikTok">t</a>{{/if}}
+          {{#if socials.discord}}<a href="{{socials.discord}}" target="_blank" rel="noopener noreferrer" aria-label="Discord">d</a>{{/if}}
+          {{#if socials.slack}}<a href="{{socials.slack}}" target="_blank" rel="noopener noreferrer" aria-label="Slack">s</a>{{/if}}
+          {{#if socials.twitch}}<a href="{{socials.twitch}}" target="_blank" rel="noopener noreferrer" aria-label="Twitch">tw</a>{{/if}}
+          {{#if socials.reddit}}<a href="{{socials.reddit}}" target="_blank" rel="noopener noreferrer" aria-label="Reddit">r</a>{{/if}}
+        </div>
+        {{/if}}
       </div>
       <div class="copyright">
         {{#if copyright}}{{copyright}}{{/if}}

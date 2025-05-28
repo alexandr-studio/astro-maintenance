@@ -1,5 +1,21 @@
 import type { AstroIntegration } from "astro";
 
+export interface Socials {
+	facebook?: string;
+	x?: string;
+	instagram?: string;
+	youtube?: string;
+	linkedin?: string;
+	mastodon?: string;
+	github?: string;
+	pinterest?: string;
+	tiktok?: string;
+	discord?: string;
+	slack?: string;
+	twitch?: string;
+	reddit?: string;
+}
+
 export interface MaintenanceOptions {
 	enabled?: boolean;
 	template?: "simple" | "countdown" | "construction" | string;
@@ -14,6 +30,7 @@ export interface MaintenanceOptions {
 	override?: string;
 	cookieName?: string;
 	cookieMaxAge?: number;
+	socials?: Socials;
 }
 
 export default function maintenance(

@@ -118,6 +118,41 @@ The integration accepts the following configuration options:
 | `override`     | `string`                                              | Query parameter to bypass maintenance mode (e.g., `'preview'`)                               | -        |
 | `cookieName`   | `string`                                              | Name of the cookie used for override persistence (default: `'astro_maintenance_override'`)   | -        |
 | `cookieMaxAge` | `number`                                              | Max age of the override cookie in seconds (default: `604800` - 7 days)                       | -        |
+| `socials`      | `object`                                              | Social media links to display on the maintenance page (see details below)                    | -        |
+
+### Socials Configuration
+
+The `socials` option allows you to display social media links on your maintenance page. You can configure the following platforms:
+
+| Social Platform | Property    | Description                                        |
+| --------------- | ----------- | -------------------------------------------------- |
+| Facebook        | `facebook`  | URL to your Facebook page or profile               |
+| X (Twitter)     | `x`         | URL to your X (formerly Twitter) profile           |
+| Instagram       | `instagram` | URL to your Instagram profile                      |
+| YouTube         | `youtube`   | URL to your YouTube channel                        |
+| LinkedIn        | `linkedin`  | URL to your LinkedIn profile or company page       |
+| GitHub          | `github`    | URL to your GitHub profile or repository           |
+| Mastodon        | `mastodon`  | URL to your Mastodon profile                       |
+| Pinterest       | `pinterest` | URL to your Pinterest profile                      |
+| TikTok          | `tiktok`    | URL to your TikTok profile                         |
+| Discord         | `discord`   | URL to your Discord server invitation              |
+| Slack           | `slack`     | URL to your Slack workspace invitation            |
+| Twitch          | `twitch`    | URL to your Twitch channel                         |
+| Reddit          | `reddit`    | URL to your Reddit profile or subreddit            |
+
+Example configuration:
+
+```js
+maintenance({
+  // ... other options
+  socials: {
+    facebook: 'https://facebook.com/yourpage',
+    x: 'https://x.com/yourusername',
+    instagram: 'https://instagram.com/yourusername',
+    github: 'https://github.com/yourusername'
+  }
+});
+```
 
 ## Environment Variables
 
