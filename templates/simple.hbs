@@ -10,6 +10,9 @@
         --foreground: rgb(0 0 0);
         --muted: rgb(140 140 140);
         --accent: rgb(60 60 60);
+        --social-background: transparent;
+        --social-color: rgb(156 163 175);
+        --social-hover: rgb(20 71 230);
       }
 
       @media (prefers-color-scheme: dark) {
@@ -18,6 +21,9 @@
           --foreground: rgb(240 240 240);
           --muted: rgb(160 160 160);
           --accent: rgb(255 130 130);
+          --social-background: rgb(31 41 55);
+          --social-color: rgb(156 163 175);
+          --social-hover: rgb(97 218 251);
         }
       }
 
@@ -36,6 +42,7 @@
       }
 
       main {
+        position: relative;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -43,6 +50,7 @@
         padding: 3vh 2rem;
         box-sizing: border-box;
         animation: fadeIn 0.6s ease-out;
+        z-index: 1;
       }
 
       p {
@@ -66,7 +74,7 @@
 
       .title {
         font-size: clamp(2rem, 5vw, 3rem);
-        font-weight: 500;
+        font-weight: 700;
         margin-bottom: 1.4rem;
       }
 
@@ -88,27 +96,54 @@
       .social-links {
         display: flex;
         justify-content: center;
-        gap: 1rem;
-        margin: 1.5rem 0;
+        gap: 2rem;
+        margin: 2rem 0;
       }
 
-      .social-links a {
-        display: inline-flex;
+      .social-link {
+        display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        width: 2.5rem;
-        height: 2.5rem;
-        border-radius: 50%;
-        background-color: var(--accent);
-        color: var(--background);
-        font-size: 1.25rem;
+        gap: 0.5rem;
         text-decoration: none;
-        transition: all 0.2s ease-in-out;
+        border-radius: 0.75rem;
+        transition: all 0.6s ease-in-out;
+        color: var(--social-color); 
       }
 
-      .social-links a:hover {
-        transform: translateY(-3px);
-        opacity: 0.9;
+      .social-link:hover {
+        color: var(--social-hover);
+      }
+
+      .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--social-background);
+        width: 5rem;
+        height: 5rem;
+        border: 6px solid var(--social-color);
+        border-radius: 9999px;
+        transition: border-color 0.6s ease-in-out;
+      }
+
+      .social-link:hover .logo-container {
+        border-color: var(--social-hover);
+      }
+
+      .logo-container svg {
+        width: 3rem;
+        height: 3rem;
+        display: block;
+        fill: currentColor;
+        opacity: 0.7;
+        transition: opacity 0.6s ease-in-out;
+      }
+
+      .social-link .label {
+        font-size: 1.2rem;
+        margin-top: 1rem;
+        transition: color 0.6s ease-in-out;
       }
 
       .background {
@@ -151,19 +186,110 @@
         </p>
         {{#if socials}}
         <div class="social-links">
-          {{#if socials.facebook}}<a href="{{socials.facebook}}" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>{{/if}}
-          {{#if socials.x}}<a href="{{socials.x}}" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">𝕏</a>{{/if}}
-          {{#if socials.instagram}}<a href="{{socials.instagram}}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">i</a>{{/if}}
-          {{#if socials.youtube}}<a href="{{socials.youtube}}" target="_blank" rel="noopener noreferrer" aria-label="YouTube">y</a>{{/if}}
-          {{#if socials.linkedin}}<a href="{{socials.linkedin}}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">in</a>{{/if}}
-          {{#if socials.github}}<a href="{{socials.github}}" target="_blank" rel="noopener noreferrer" aria-label="GitHub">g</a>{{/if}}
-          {{#if socials.mastodon}}<a href="{{socials.mastodon}}" target="_blank" rel="noopener noreferrer" aria-label="Mastodon">m</a>{{/if}}
-          {{#if socials.pinterest}}<a href="{{socials.pinterest}}" target="_blank" rel="noopener noreferrer" aria-label="Pinterest">p</a>{{/if}}
-          {{#if socials.tiktok}}<a href="{{socials.tiktok}}" target="_blank" rel="noopener noreferrer" aria-label="TikTok">t</a>{{/if}}
-          {{#if socials.discord}}<a href="{{socials.discord}}" target="_blank" rel="noopener noreferrer" aria-label="Discord">d</a>{{/if}}
-          {{#if socials.slack}}<a href="{{socials.slack}}" target="_blank" rel="noopener noreferrer" aria-label="Slack">s</a>{{/if}}
-          {{#if socials.twitch}}<a href="{{socials.twitch}}" target="_blank" rel="noopener noreferrer" aria-label="Twitch">tw</a>{{/if}}
-          {{#if socials.reddit}}<a href="{{socials.reddit}}" target="_blank" rel="noopener noreferrer" aria-label="Reddit">r</a>{{/if}}
+          {{#if socials.facebook}}<a href="{{socials.facebook}}" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <div class="logo-container">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50px" height="50px">
+                <path d="M41,4H9C6.24,4,4,6.24,4,9v32c0,2.76,2.24,5,5,5h32c2.76,0,5-2.24,5-5V9C46,6.24,43.76,4,41,4z M37,19h-2c-2.14,0-3,0.5-3,2 v3h5l-1,5h-4v15h-5V29h-4v-5h4v-3c0-4,2-7,6-7c2.9,0,4,1,4,1V19z"/>
+              </svg>
+            </div>
+            <span class="label">facebook</span>
+          </a>{{/if}}
+          {{#if socials.x}}<a href="{{socials.x}}" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+            <div class="logo-container">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                <path d="M 11 4 C 7.134 4 4 7.134 4 11 L 4 39 C 4 42.866 7.134 46 11 46 L 39 46 C 42.866 46 46 42.866 46 39 L 46 11 C 46 7.134 42.866 4 39 4 L 11 4 z M 13.085938 13 L 21.023438 13 L 26.660156 21.009766 L 33.5 13 L 36 13 L 27.789062 22.613281 L 37.914062 37 L 29.978516 37 L 23.4375 27.707031 L 15.5 37 L 13 37 L 22.308594 26.103516 L 13.085938 13 z M 16.914062 15 L 31.021484 35 L 34.085938 35 L 19.978516 15 L 16.914062 15 z"/>
+              </svg>
+            </div>
+            <span class="label">X</span>
+          </a>{{/if}}
+          {{#if socials.instagram}}<a href="{{socials.instagram}}" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <div class="logo-container">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50px" height="50px">
+                <path d="M 16 3 C 8.83 3 3 8.83 3 16 L 3 34 C 3 41.17 8.83 47 16 47 L 34 47 C 41.17 47 47 41.17 47 34 L 47 16 C 47 8.83 41.17 3 34 3 L 16 3 z M 37 11 C 38.1 11 39 11.9 39 13 C 39 14.1 38.1 15 37 15 C 35.9 15 35 14.1 35 13 C 35 11.9 35.9 11 37 11 z M 25 14 C 31.07 14 36 18.93 36 25 C 36 31.07 31.07 36 25 36 C 18.93 36 14 31.07 14 25 C 14 18.93 18.93 14 25 14 z M 25 16 C 20.04 16 16 20.04 16 25 C 16 29.96 20.04 34 25 34 C 29.96 34 34 29.96 34 25 C 34 20.04 29.96 16 25 16 z"/>
+              </svg>
+            </div>
+            <span class="label">Instagram</span>
+          </a>{{/if}}
+          {{#if socials.youtube}}<a href="{{socials.youtube}}" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+            <div class="logo-container">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50px" height="50px">
+                <path d="M 44.898438 14.5 C 44.5 12.300781 42.601563 10.699219 40.398438 10.199219 C 37.101563 9.5 31 9 24.398438 9 C 17.800781 9 11.601563 9.5 8.300781 10.199219 C 6.101563 10.699219 4.199219 12.199219 3.800781 14.5 C 3.398438 17 3 20.5 3 25 C 3 29.5 3.398438 33 3.898438 35.5 C 4.300781 37.699219 6.199219 39.300781 8.398438 39.800781 C 11.898438 40.5 17.898438 41 24.5 41 C 31.101563 41 37.101563 40.5 40.601563 39.800781 C 42.800781 39.300781 44.699219 37.800781 45.101563 35.5 C 45.5 33 46 29.398438 46.101563 25 C 45.898438 20.5 45.398438 17 44.898438 14.5 Z M 19 32 L 19 18 L 31.199219 25 Z"/>
+              </svg>
+            </div>
+            <span class="label">YouTube</span>
+          </a>{{/if}}
+          {{#if socials.linkedin}}<a href="{{socials.linkedin}}" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <div class="logo-container">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50px" height="50px">
+                <path d="M41,4H9C6.24,4,4,6.24,4,9v32c0,2.76,2.24,5,5,5h32c2.76,0,5-2.24,5-5V9C46,6.24,43.76,4,41,4z M17,20v19h-6V20H17z M11,14.47c0-1.4,1.2-2.47,3-2.47s2.93,1.07,3,2.47c0,1.4-1.12,2.53-3,2.53C12.2,17,11,15.87,11,14.47z M39,39h-6c0,0,0-9.26,0-10 c0-2-1-4-3.5-4.04h-0.08C27,24.96,26,27.02,26,29c0,0.91,0,10,0,10h-6V20h6v2.56c0,0,1.93-2.56,5.81-2.56 c3.97,0,7.19,2.73,7.19,8.26V39z"/>
+              </svg>
+            </div>
+            <span class="label">LinkedIn</span>
+          </a>{{/if}}
+          {{#if socials.github}}<a href="{{socials.github}}" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <div class="logo-container">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50px" height="50px">
+                <path d="M17.791,46.836C18.502,46.53,19,45.823,19,45v-5.4c0-0.197,0.016-0.402,0.041-0.61C19.027,38.994,19.014,38.997,19,39 c0,0-3,0-3.6,0c-1.5,0-2.8-0.6-3.4-1.8c-0.7-1.3-1-3.5-2.8-4.7C8.9,32.3,9.1,32,9.7,32c0.6,0.1,1.9,0.9,2.7,2c0.9,1.1,1.8,2,3.4,2 c2.487,0,3.82-0.125,4.622-0.555C21.356,34.056,22.649,33,24,33v-0.025c-5.668-0.182-9.289-2.066-10.975-4.975 c-3.665,0.042-6.856,0.405-8.677,0.707c-0.058-0.327-0.108-0.656-0.151-0.987c1.797-0.296,4.843-0.647,8.345-0.714 c-0.112-0.276-0.209-0.559-0.291-0.849c-3.511-0.178-6.541-0.039-8.187,0.097c-0.02-0.332-0.047-0.663-0.051-0.999 c1.649-0.135,4.597-0.27,8.018-0.111c-0.079-0.5-0.13-1.011-0.13-1.543c0-1.7,0.6-3.5,1.7-5c-0.5-1.7-1.2-5.3,0.2-6.6 c2.7,0,4.6,1.3,5.5,2.1C21,13.4,22.9,13,25,13s4,0.4,5.6,1.1c0.9-0.8,2.8-2.1,5.5-2.1c1.5,1.4,0.7,5,0.2,6.6c1.1,1.5,1.7,3.2,1.6,5 c0,0.484-0.045,0.951-0.11,1.409c3.499-0.172,6.527-0.034,8.204,0.102c-0.002,0.337-0.033,0.666-0.051,0.999 c-1.671-0.138-4.775-0.28-8.359-0.089c-0.089,0.336-0.197,0.663-0.325,0.98c3.546,0.046,6.665,0.389,8.548,0.689 c-0.043,0.332-0.093,0.661-0.151,0.987c-1.912-0.306-5.171-0.664-8.879-0.682C35.112,30.873,31.557,32.75,26,32.969V33 c2.6,0,5,3.9,5,6.6V45c0,0.823,0.498,1.53,1.209,1.836C41.37,43.804,48,35.164,48,25C48,12.318,37.683,2,25,2S2,12.318,2,25 C2,35.164,8.63,43.804,17.791,46.836z"/>
+              </svg>
+            </div>
+            <span class="label">Github</span>          </a>{{/if}}
+          {{#if socials.mastodon}}<a href="{{socials.mastodon}}" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Mastodon">
+            <div class="logo-container">
+              <svg fill="#000000" width="50px" height="50px" viewBox="0 0 32 32"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M 15.9375 4.03125 C 12.917 4.0435 9.9179219 4.4269844 8.3574219 5.1464844 C 8.3574219 5.1464844 5 6.6748594 5 11.880859 C 5 18.077859 4.9955 25.860234 10.5625 27.365234 C 12.6945 27.938234 14.527953 28.061562 16.001953 27.976562 C 18.676953 27.825562 20 27.005859 20 27.005859 L 19.910156 25.029297 C 19.910156 25.029297 18.176297 25.640313 16.029297 25.570312 C 13.902297 25.495313 11.6615 25.335688 11.3125 22.679688 C 11.2805 22.432688 11.264625 22.182594 11.265625 21.933594 C 15.772625 23.052594 19.615828 22.420969 20.673828 22.292969 C 23.627828 21.933969 26.199344 20.081672 26.527344 18.388672 C 27.041344 15.720672 26.998047 11.880859 26.998047 11.880859 C 26.998047 6.6748594 23.646484 5.1464844 23.646484 5.1464844 C 22.000984 4.3779844 18.958 4.019 15.9375 4.03125 z M 12.705078 8.0019531 C 13.739953 8.0297031 14.762578 8.4927031 15.392578 9.4707031 L 16.001953 10.505859 L 16.609375 9.4707031 C 17.874375 7.5037031 20.709594 7.6264375 22.058594 9.1484375 C 23.302594 10.596438 23.025391 11.531 23.025391 18 L 23.025391 18.001953 L 20.578125 18.001953 L 20.578125 12.373047 C 20.578125 9.7380469 17.21875 9.6362812 17.21875 12.738281 L 17.21875 16 L 14.787109 16 L 14.787109 12.738281 C 14.787109 9.6362812 11.429688 9.7360938 11.429688 12.371094 L 11.429688 18 L 8.9765625 18 C 8.9765625 11.526 8.7043594 10.585438 9.9433594 9.1484375 C 10.622859 8.3824375 11.670203 7.9742031 12.705078 8.0019531 z"/>
+              </svg>
+            </div>
+            <span class="label">Mastodon</span>
+          </a>{{/if}}
+          {{#if socials.pinterest}}<a href="{{socials.pinterest}}" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Pinterest">
+            <div class="logo-container">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50px" height="50px">
+                <path d="M25,2C12.3178711,2,2,12.3178711,2,25c0,9.8841553,6.2675781,18.3302612,15.036377,21.5769653	c-0.2525635-2.2515869-0.2129517-5.9390259,0.2037964-7.7243652c0.3902588-1.677002,2.5212402-10.6871338,2.5212402-10.6871338	s-0.6433105-1.2883301-0.6433105-3.1911011c0-2.9901733,1.7324219-5.2211914,3.8898315-5.2211914	c1.8349609,0,2.7197876,1.3776245,2.7197876,3.0281982c0,1.8457031-1.1734619,4.6026611-1.78125,7.1578369	c-0.506897,2.1409302,1.0733643,3.8865356,3.1836548,3.8865356c3.821228,0,6.7584839-4.0296021,6.7584839-9.8453369	c0-5.147583-3.697998-8.7471924-8.9795532-8.7471924c-6.1167603,0-9.7072754,4.588562-9.7072754,9.3309937	c0,1.8473511,0.7111816,3.8286743,1.6000977,4.9069824c0.175293,0.2133179,0.2009277,0.3994141,0.1488647,0.6160278	c-0.1629028,0.678894-0.5250854,2.1392822-0.5970459,2.4385986c-0.0934448,0.3944702-0.3117676,0.4763184-0.7186279,0.2869263	c-2.685791-1.2503052-4.364502-5.1756592-4.364502-8.3295898c0-6.7815552,4.9268188-13.0108032,14.206543-13.0108032	c7.4588623,0,13.2547607,5.3138428,13.2547607,12.4179077c0,7.4100342-4.6729126,13.3729858-11.1568604,13.3729858	c-2.178894,0-4.2263794-1.132019-4.9267578-2.4691772c0,0-1.0783081,4.1048584-1.3404541,5.1112061	c-0.4524536,1.7404175-2.3892822,5.3460083-3.3615723,6.9837036C20.1704712,47.6074829,22.5397949,48,25,48	c12.6826172,0,23-10.3173828,23-23C48,12.3178711,37.6826172,2,25,2z"/>
+              </svg>
+            </div>
+            <span class="label">Pinterest</span>
+          </a>{{/if}}
+          {{#if socials.tiktok}}<a href="{{socials.tiktok}}" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+            <div class="logo-container">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50px" height="50px">
+                <path d="M41,4H9C6.243,4,4,6.243,4,9v32c0,2.757,2.243,5,5,5h32c2.757,0,5-2.243,5-5V9C46,6.243,43.757,4,41,4z M37.006,22.323 c-0.227,0.021-0.457,0.035-0.69,0.035c-2.623,0-4.928-1.349-6.269-3.388c0,5.349,0,11.435,0,11.537c0,4.709-3.818,8.527-8.527,8.527 s-8.527-3.818-8.527-8.527s3.818-8.527,8.527-8.527c0.178,0,0.352,0.016,0.527,0.027v4.202c-0.175-0.021-0.347-0.053-0.527-0.053 c-2.404,0-4.352,1.948-4.352,4.352s1.948,4.352,4.352,4.352s4.527-1.894,4.527-4.298c0-0.095,0.042-19.594,0.042-19.594h4.016 c0.378,3.591,3.277,6.425,6.901,6.685V22.323z"/>
+              </svg>
+            </div>
+            <span class="label">TikTok</span>
+          </a>{{/if}}
+          {{#if socials.discord}}<a href="{{socials.discord}}" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Discord">
+            <div class="logo-container">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50px" height="50px">
+                  <path d="M 41.625 10.769531 C 37.644531 7.566406 31.347656 7.023438 31.078125 7.003906 C 30.660156 6.96875 30.261719 7.203125 30.089844 7.589844 C 30.074219 7.613281 29.9375 7.929688 29.785156 8.421875 C 32.417969 8.867188 35.652344 9.761719 38.578125 11.578125 C 39.046875 11.867188 39.191406 12.484375 38.902344 12.953125 C 38.710938 13.261719 38.386719 13.429688 38.050781 13.429688 C 37.871094 13.429688 37.6875 13.378906 37.523438 13.277344 C 32.492188 10.15625 26.210938 10 25 10 C 23.789063 10 17.503906 10.15625 12.476563 13.277344 C 12.007813 13.570313 11.390625 13.425781 11.101563 12.957031 C 10.808594 12.484375 10.953125 11.871094 11.421875 11.578125 C 14.347656 9.765625 17.582031 8.867188 20.214844 8.425781 C 20.0625 7.929688 19.925781 7.617188 19.914063 7.589844 C 19.738281 7.203125 19.34375 6.960938 18.921875 7.003906 C 18.652344 7.023438 12.355469 7.566406 8.320313 10.8125 C 6.214844 12.761719 2 24.152344 2 34 C 2 34.175781 2.046875 34.34375 2.132813 34.496094 C 5.039063 39.605469 12.972656 40.941406 14.78125 41 C 14.789063 41 14.800781 41 14.8125 41 C 15.132813 41 15.433594 40.847656 15.621094 40.589844 L 17.449219 38.074219 C 12.515625 36.800781 9.996094 34.636719 9.851563 34.507813 C 9.4375 34.144531 9.398438 33.511719 9.765625 33.097656 C 10.128906 32.683594 10.761719 32.644531 11.175781 33.007813 C 11.234375 33.0625 15.875 37 25 37 C 34.140625 37 38.78125 33.046875 38.828125 33.007813 C 39.242188 32.648438 39.871094 32.683594 40.238281 33.101563 C 40.601563 33.515625 40.5625 34.144531 40.148438 34.507813 C 40.003906 34.636719 37.484375 36.800781 32.550781 38.074219 L 34.378906 40.589844 C 34.566406 40.847656 34.867188 41 35.1875 41 C 35.199219 41 35.210938 41 35.21875 41 C 37.027344 40.941406 44.960938 39.605469 47.867188 34.496094 C 47.953125 34.34375 48 34.175781 48 34 C 48 24.152344 43.785156 12.761719 41.625 10.769531 Z M 18.5 30 C 16.566406 30 15 28.210938 15 26 C 15 23.789063 16.566406 22 18.5 22 C 20.433594 22 22 23.789063 22 26 C 22 28.210938 20.433594 30 18.5 30 Z M 31.5 30 C 29.566406 30 28 28.210938 28 26 C 28 23.789063 29.566406 22 31.5 22 C 33.433594 22 35 23.789063 35 26 C 35 28.210938 33.433594 30 31.5 30 Z"/>
+              </svg>
+            </div>
+            <span class="label">Discord</span>
+          </a>{{/if}}
+          {{#if socials.slack}}<a href="{{socials.slack}}" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Slack">
+            <div class="logo-container">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50px" height="50px">
+                <path d="M31 24c-2.757 0-5-2.243-5-5V7c0-2.757 2.243-5 5-5s5 2.243 5 5v12C36 21.757 33.757 24 31 24zM43 24h-4c-.553 0-1-.447-1-1v-4c0-2.757 2.243-5 5-5s5 2.243 5 5S45.757 24 43 24zM19 24H7c-2.757 0-5-2.243-5-5s2.243-5 5-5h12c2.757 0 5 2.243 5 5S21.757 24 19 24zM23 12h-4c-2.757 0-5-2.243-5-5s2.243-5 5-5 5 2.243 5 5v4C24 11.553 23.553 12 23 12zM19 48c-2.757 0-5-2.243-5-5V31c0-2.757 2.243-5 5-5s5 2.243 5 5v12C24 45.757 21.757 48 19 48zM7 36c-2.757 0-5-2.243-5-5s2.243-5 5-5h4c.553 0 1 .447 1 1v4C12 33.757 9.757 36 7 36zM43 36H31c-2.757 0-5-2.243-5-5s2.243-5 5-5h12c2.757 0 5 2.243 5 5S45.757 36 43 36zM31 48c-2.757 0-5-2.243-5-5v-4c0-.553.447-1 1-1h4c2.757 0 5 2.243 5 5S33.757 48 31 48z"/>
+              </svg>
+            </div>
+            <span class="label">Slack</span>
+          </a>{{/if}}
+          {{#if socials.twitch}}<a href="{{socials.twitch}}" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Twitch">
+            <div class="logo-container">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50px" height="50px">
+                <path d="M 5.3125 1 L 2 9.8125 L 2 43 L 13 43 L 13 49 L 20.40625 49 L 26.40625 43 L 35.40625 43 L 48 30.4375 L 48 1 Z M 11 6 L 43 6 L 43 28 L 37 34 L 25 34 L 19 40 L 19 34 L 11 34 Z M 20 13 L 20 27 L 26 27 L 26 13 Z M 30 13 L 30 27 L 36 27 L 36 13 Z"/>
+              </svg>
+            </div>
+            <span class="label">Twitch</span>
+          </a>{{/if}}
+          {{#if socials.reddit}}<a href="{{socials.reddit}}" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Reddit">
+            <div class="logo-container">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50px" height="50px">
+                  <path d="M 29 3 C 26.894531 3 24.433594 4.652344 24.0625 12.03125 C 24.375 12.023438 24.683594 12 25 12 C 25.351563 12 25.714844 12.019531 26.0625 12.03125 C 26.300781 7.597656 27.355469 5 29 5 C 29.703125 5 30.101563 5.382813 30.84375 6.1875 C 31.710938 7.128906 32.84375 8.351563 35.0625 8.8125 C 35.027344 8.550781 35 8.269531 35 8 C 35 7.578125 35.042969 7.179688 35.125 6.78125 C 33.75 6.40625 33.023438 5.613281 32.3125 4.84375 C 31.519531 3.984375 30.609375 3 29 3 Z M 41 4 C 38.792969 4 37 5.796875 37 8 C 37 10.203125 38.792969 12 41 12 C 43.207031 12 45 10.203125 45 8 C 45 5.796875 43.207031 4 41 4 Z M 25 14 C 12.867188 14 3 20.179688 3 29 C 3 37.820313 12.867188 45 25 45 C 37.132813 45 47 37.820313 47 29 C 47 20.179688 37.132813 14 25 14 Z M 7.5 14.9375 C 6.039063 14.9375 4.652344 15.535156 3.59375 16.59375 C 1.871094 18.316406 1.515625 20.792969 2.5 22.84375 C 4.011719 19.917969 6.613281 17.421875 9.96875 15.5625 C 9.207031 15.175781 8.363281 14.9375 7.5 14.9375 Z M 42.5 14.9375 C 41.636719 14.9375 40.792969 15.175781 40.03125 15.5625 C 43.386719 17.421875 45.988281 19.917969 47.5 22.84375 C 48.484375 20.792969 48.128906 18.316406 46.40625 16.59375 C 45.347656 15.535156 43.960938 14.9375 42.5 14.9375 Z M 17 23 C 18.65625 23 20 24.34375 20 26 C 20 27.65625 18.65625 29 17 29 C 15.34375 29 14 27.65625 14 26 C 14 24.34375 15.34375 23 17 23 Z M 33 23 C 34.65625 23 36 24.34375 36 26 C 36 27.65625 34.65625 29 33 29 C 31.34375 29 30 27.65625 30 26 C 30 24.34375 31.34375 23 33 23 Z M 16.0625 34 C 16.3125 34.042969 16.558594 34.183594 16.71875 34.40625 C 16.824219 34.554688 19.167969 37.6875 25 37.6875 C 30.910156 37.6875 33.257813 34.46875 33.28125 34.4375 C 33.597656 33.988281 34.234375 33.867188 34.6875 34.1875 C 35.136719 34.503906 35.222656 35.109375 34.90625 35.5625 C 34.789063 35.730469 31.9375 39.6875 25 39.6875 C 18.058594 39.6875 15.210938 35.730469 15.09375 35.5625 C 14.777344 35.109375 14.859375 34.503906 15.3125 34.1875 C 15.539063 34.027344 15.8125 33.957031 16.0625 34 Z"/>
+              </svg>
+            </div>
+            <span class="label">Reddit</span>
+          </a>{{/if}}
         </div>
         {{/if}}
       </div>
