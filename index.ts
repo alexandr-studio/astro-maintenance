@@ -34,7 +34,7 @@ export interface MaintenanceOptions {
 }
 
 export default function maintenance(
-	options: MaintenanceOptions,
+	options?: MaintenanceOptions,
 ): AstroIntegration {
 	const resolvedOptions: MaintenanceOptions = {
 		enabled: true,
