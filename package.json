@@ -1,6 +1,6 @@
 {
   "name": "astro-maintenance",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Maintenance and Coming Soon integration for Astro",
   "type": "module",
   "exports": {
@@ -21,15 +21,15 @@
   "license": "MIT",
   "devDependencies": {
     "@playwright/test": "^1.52.0",
-    "@types/node": "^22.15.19",
-    "astro": "^5.7.13",
+    "@types/node": "^22.15.24",
+    "astro": "^5.8.0",
     "chalk": "^5.4.1"
   },
   "peerDependencies": {
     "astro": "^5.0.0"
   },
   "dependencies": {
-    "@astrojs/node": "^9.2.1",
+    "@astrojs/node": "^9.2.2",
     "cookie": "^1.0.2",
     "handlebars": "^4.7.8"
   },
