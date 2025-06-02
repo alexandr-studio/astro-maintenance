@@ -1,6 +1,6 @@
 {
   "name": "astro-maintenance",
-  "version": "1.2.0",
+  "version": "2.0.0-next.1",
   "description": "Maintenance and Coming Soon integration for Astro",
   "type": "module",
   "exports": {
@@ -34,7 +34,7 @@
     "handlebars": "^4.7.8"
   },
   "engines": {
-    "node": "^18.17.1 || ^20.3.0 || >=21.0.0"
+    "node": "^20.3.0 || >=21.0.0"
   },
   "publishConfig": {
     "access": "public"

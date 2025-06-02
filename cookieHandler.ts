@@ -1,7 +1,7 @@
 import type { APIContext } from "astro";
 
 export function setCookieAndRedirect(
-  context: APIContext,
+  _context: APIContext,
   targetPath: string,
   cookies: Record<string, string>,
   options: {
@@ -35,7 +35,7 @@ export function setCookieAndRedirect(
 }
 
 export function clearCookieAndRedirect(
-  context: APIContext,
+  _context: APIContext,
   location: string,
   cookieNames: string[],
   options: {

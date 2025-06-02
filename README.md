@@ -90,7 +90,7 @@ export default defineConfig({
   integrations: [
     maintenance({
       enabled: true, // Set to false to disable maintenance mode
-      template: "simple", // Options: 'simple', 'countdown', 'construction' or path to custom template
+      template: "simple", // Options: 'simple', 'countdown', 'construction' or imported template content
       title: "Site Under Maintenance",
       description:
         "We are performing scheduled maintenance. Please check back soon.",
@@ -107,7 +107,7 @@ The integration accepts the following configuration options:
 | Property       | Type                                                  | Description                                                                                  | Required |
 | -------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------- |
 | `enabled`      | `boolean`                                             | Enable or disable maintenance mode                                                           | Yes      |
-| `template`     | `'simple' \| 'countdown' \| 'construction' \| string` | Built-in template, path to custom template, or route path                                    | -        |
+| `template`     | `'simple' \| 'countdown' \| 'construction' \| string` | Built-in template, imported template content, or route path                                  | -        |
 | `title`        | `string`                                              | Page title (default: `'Site under maintenance'`)                                             | -        |
 | `description`  | `string`                                              | Description text                                                                             | -        |
 | `logo`         | `string`                                              | URL to your logo image. Must reside in the `assets` or `logo` subfolder of the public folder | -        |
@@ -301,17 +301,22 @@ This performs a 302 redirect to the specified route when maintenance mode is ena
 
 ### Custom Template
 
-You can use a custom Handlebars template by providing a path to the template file:
+You can use a custom Handlebars template by importing it as raw content and passing it directly to the template option. This approach ensures compatibility with serverless environments like Cloudflare and Vercel.
 
 ```js
+// Import your custom template as raw string content
+import customTemplate from './src/templates/custom-maintenance.hbs?raw';
+
 maintenance({
   enabled: true,
-  template: "./templates/custom-maintenance.hbs", // Path relative to the project root
+  template: customTemplate, // Pass imported template content directly
   title: "Custom Maintenance Page",
   description: "Our site is getting an upgrade.",
   // ... other options will be passed to the template
 });
 ```
+
+> **⚠️ Breaking Change:** File path-based templates (e.g., `"./templates/custom.hbs"`) are no longer supported to ensure serverless compatibility. You must now import templates using the `?raw` suffix and pass the content directly.
 
 Here's an example of a custom Handlebars template:
 

@@ -1,8 +1,5 @@
 import type { MaintenanceOptions } from "./index";
 import Handlebars from "handlebars";
-import path from "node:path";
-import fs from "node:fs";
-import { fileURLToPath } from "node:url";
 
 // Use ?raw to import file content as string
 import simpleTemplateSource from "./templates/simple.hbs?raw";
@@ -42,39 +39,12 @@ Handlebars.registerHelper(
 	},
 );
 
-// Path to built-in templates
-const templatesDir = fileURLToPath(new URL("./templates", import.meta.url));
+// Built-in templates imported as raw strings
 const builtInTemplates: Record<string, string> = {
 	simple: simpleTemplateSource,
 	countdown: countdownTemplateSource,
 	construction: constructionTemplateSource,
 };
-
-// Helper function to load a template file
-function loadBuiltInTemplate(templateName: string): string {
-	try {
-		return fs.readFileSync(
-			path.join(templatesDir, `${templateName}.hbs`),
-			"utf-8",
-		);
-	} catch (error) {
-		console.error(`Error loading built-in template ${templateName}: ${error}`);
-		// Provide a simple fallback template in case of errors
-		return `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>{{title}}</title>
-          <style>body { font-family: sans-serif; text-align: center; padding: 40px; }</style>
-        </head>
-        <body>
-          <h1>{{title}}</h1>
-          <p>{{description}}</p>
-        </body>
-      </html>
-    `;
-	}
-}
 
 // Cache for compiled templates
 const compiledTemplates: Record<string, Handlebars.TemplateDelegate> = {};
@@ -84,26 +54,33 @@ function getCompiledTemplate(
 	templateName: string,
 ): Handlebars.TemplateDelegate {
 	if (!compiledTemplates[templateName]) {
-		const source =
-			builtInTemplates[templateName] ?? loadBuiltInTemplate(templateName);
-		compiledTemplates[templateName] = Handlebars.compile(source);
+		const source = builtInTemplates[templateName];
+		if (!source) {
+			console.error(`Built-in template "${templateName}" not found`);
+			// Fallback to simple template
+			compiledTemplates[templateName] = Handlebars.compile(builtInTemplates.simple);
+		} else {
+			compiledTemplates[templateName] = Handlebars.compile(source);
+		}
 	}
 	return compiledTemplates[templateName];
 }
 
-// Helper to try to load a custom template
-function loadCustomTemplate(
-	templatePath: string,
-): Handlebars.TemplateDelegate | null {
+// Helper to detect if a string is template content vs template name
+function isTemplateContent(template: string): boolean {
+	// Template content should contain HTML tags or be multiline
+	return template.includes('<') || template.includes('\n') || template.length > 100;
+}
+
+// Compile custom template content
+function compileCustomTemplate(templateContent: string): Handlebars.TemplateDelegate {
 	try {
-		if (fs.existsSync(templatePath)) {
-			const templateContent = fs.readFileSync(templatePath, "utf-8");
-			return Handlebars.compile(templateContent);
-		}
+		return Handlebars.compile(templateContent);
 	} catch (error) {
-		console.error(`Error loading custom template: ${error}`);
+		console.error(`Error compiling custom template: ${error}`);
+		// Fallback to simple template
+		return getCompiledTemplate("simple");
 	}
-	return null;
 }
 
 export default function renderPage(options: MaintenanceOptions) {
@@ -131,40 +108,26 @@ export default function renderPage(options: MaintenanceOptions) {
 		socials,
 	};
 
-	// Check if a custom template path is provided as absolute path
-	if (typeof template === "string" && template.startsWith("/")) {
-		const customTemplate = loadCustomTemplate(template);
-		if (customTemplate) {
-			return customTemplate(templateData);
-		}
-		// Fallback to simple template if custom template can't be loaded
-		return getCompiledTemplate("simple")(templateData);
+	// Check if template is imported content
+	if (typeof template === "string" && isTemplateContent(template)) {
+		const customTemplate = compileCustomTemplate(template);
+		return customTemplate(templateData);
 	}
 
-	// Check if it's a relative path
-	if (
-		typeof template === "string" &&
-		(template.startsWith("./") || template.startsWith("../"))
-	) {
-		try {
-			const rootDir = process.cwd();
-			const fullPath = path.resolve(rootDir, template);
-			const customTemplate = loadCustomTemplate(fullPath);
-			if (customTemplate) {
-				return customTemplate(templateData);
-			}
-		} catch (error) {
-			console.error(`Error loading template from relative path: ${error}`);
-		}
-	}
-
-	// Use built-in templates
+	// Handle built-in templates by name
 	if (template === "countdown" && countdown) {
 		return getCompiledTemplate("countdown")(templateData);
 	} else if (template === "construction") {
 		return getCompiledTemplate("construction")(templateData);
+	} else if (template === "simple" || !template) {
+		return getCompiledTemplate("simple")(templateData);
 	} else {
-		// Default to simple
+		// If it's a string but not template content, warn about deprecated usage
+		console.warn(
+			`[astro-maintenance] File path templates are no longer supported: "${template}". ` +
+			`Please import your template using "?raw" and pass the content directly. ` +
+			`Falling back to simple template.`
+		);
 		return getCompiledTemplate("simple")(templateData);
 	}
 }

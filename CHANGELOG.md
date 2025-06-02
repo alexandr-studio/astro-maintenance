@@ -5,6 +5,26 @@ All notable changes to the Astro Maintenance integration will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [2.0.0] - 2025-01-XX
+
+### Changed
+
+- **BREAKING CHANGE**: Custom Handlebars templates must now be imported using `?raw` suffix and passed as content instead of file paths
+- Removed filesystem-based template loading for improved serverless compatibility
+- Updated template detection logic to differentiate between template content and redirect paths
+
+### Added
+
+- Support for imported template content via `import template from './path.hbs?raw'`
+- Better error handling and fallback behavior for custom templates
+- Warning messages for deprecated file path usage
+- Migration guide documentation
+
+### Removed
+
+- **BREAKING CHANGE**: File path-based custom templates (e.g., `"./templates/custom.hbs"`) are no longer supported
+- Filesystem dependencies (`fs`, `path`) removed from runtime
+
 ### [1.2.0] - 2025-05-29
 
 ### Added

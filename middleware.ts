@@ -94,13 +94,19 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
 		}
 	}
 
-	// Handle astro template (e.g. /maintenance)
+	// Helper to detect if a string is template content vs redirect path
+	function isTemplateContent(template: string): boolean {
+		return template.includes('<') || template.includes('\n') || template.length > 100;
+	}
+
+	// Handle astro redirect path (e.g. /we_work_on)
 	let isCustomPath = false;
 	if (
 		options.template &&
 		typeof options.template === "string" &&
 		options.template.startsWith("/") &&
-		!options.template.includes(".")
+		!options.template.includes(".") &&
+		!isTemplateContent(options.template)
 	) {
 		isCustomPath = true;
 		allowedPaths.add(options.template);

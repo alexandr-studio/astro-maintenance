@@ -18,6 +18,16 @@ export interface Socials {
 
 export interface MaintenanceOptions {
 	enabled?: boolean;
+	/**
+	 * Template to use for the maintenance page.
+	 * - Use "simple", "countdown", or "construction" for built-in templates
+	 * - For custom templates, import them using ?raw and pass the content directly:
+	 *   ```
+	 *   import customTemplate from "./src/templates/custom.hbs?raw";
+	 *   maintenance({ template: customTemplate })
+	 *   ```
+	 * - File paths are no longer supported to ensure serverless compatibility
+	 */
 	template?: "simple" | "countdown" | "construction" | string;
 	logo?: string;
 	title?: string;
