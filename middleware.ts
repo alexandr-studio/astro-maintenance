@@ -118,42 +118,51 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
 		return next();
 	}
 
-	// Handle cookies
-	// Check if Cookie allow the request
+	// Handle cookies & params for override functionality
 	const cookies = request.headers.get("cookie") || "";
 	const parsedCookies = parseCookies(cookies);
 	const hasOverrideCookie = parsedCookies[options.cookieName] === "true";
+	
+	// Check for override parameter
+	const hasOverrideParam = options.override && url.searchParams.has(options.override);
+	
+	// Look for the special active-bypass parameter that we add with the cookie
+	const activeBypass = url.searchParams.has("active-bypass");
 
-	// check if override param is set
-	const hasOverrideParam =
-		options.override && url.searchParams.has(options.override);
-
-	// check if reset param is set
+	// Check for reset request
 	const hasResetParam = options.override && url.searchParams.has("reset");
 
+	// Handle reset request
 	if (hasResetParam) {
 		return clearCookieAndRedirect(context, url.pathname.split("?")[0] || "/", [
 			options.cookieName,
 		]);
 	}
 
+	// If override param is present, set cookie and add special param
 	if (hasOverrideParam) {
+		// Create a new URL without the override parameter but with active-bypass
+		const redirectURL = new URL(url);
+		redirectURL.searchParams.delete(options.override);
+		redirectURL.searchParams.set("active-bypass", "true");
+		
 		return setCookieAndRedirect(
 			context,
-			"/",
+			redirectURL.pathname + redirectURL.search,
 			{
 				[options.cookieName]: "true",
 			},
 			{
 				maxAge: options.cookieMaxAge,
-				httpOnly: true,
-				secure: true,
-				sameSite: "Strict",
+				httpOnly: false, // Allow JavaScript access
+				secure: url.protocol === "https:", // Only secure if the site is HTTPS
+				sameSite: "Lax", // More compatible with CDNs
 			},
 		);
 	}
 
-	if (hasOverrideCookie) {
+	// Allow bypass if we have the cookie OR the active-bypass parameter
+	if (hasOverrideCookie || activeBypass) {
 		return next();
 	}
 

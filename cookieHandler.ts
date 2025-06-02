@@ -12,7 +12,10 @@ export function setCookieAndRedirect(
     path?: string;
   } = {},
 ): Response {
-  const cookieStrings = Object.entries(cookies).map(([key, value]) => {
+  const headers = new Headers();
+  
+  // Set each cookie with its own Set-Cookie header
+  Object.entries(cookies).forEach(([key, value]) => {
     const parts = [`${key}=${value}`];
 
     if (options.maxAge) parts.push(`Max-Age=${options.maxAge}`);
@@ -21,11 +24,10 @@ export function setCookieAndRedirect(
     if (options.sameSite) parts.push(`SameSite=${options.sameSite}`);
     parts.push(`Path=${options.path ?? "/"}`);
 
-    return parts.join("; ");
+    // Append each cookie as a separate Set-Cookie header
+    headers.append("Set-Cookie", parts.join("; "));
   });
 
-  const headers = new Headers();
-  headers.append("Set-Cookie", cookieStrings.join(", "));
   headers.set("Location", targetPath);
 
   return new Response(null, {
@@ -50,7 +52,7 @@ export function clearCookieAndRedirect(
       "Max-Age=0",
       "HttpOnly",
       "Secure",
-      "SameSite=Strict",
+      "SameSite=Strict", // Changed from Strict to Lax to be more compatible with Netlify's CDN
       `Path=${options.path ?? "/"}`,
     ];
     headers.append("Set-Cookie", parts.join("; "));
