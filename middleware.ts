@@ -129,14 +129,41 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
 	// Look for the special active-bypass parameter that we add with the cookie
 	const activeBypass = url.searchParams.has("active-bypass");
 
-	// Check for reset request
-	const hasResetParam = options.override && url.searchParams.has("reset");
+	// Check for reset request - just look for the 'reset' parameter
+	const hasResetParam = url.searchParams.has("reset");
 
-	// Handle reset request
+	// Handle reset request with our special redirect pattern to avoid CDN redirect loops
 	if (hasResetParam) {
-		return clearCookieAndRedirect(context, url.pathname.split("?")[0] || "/", [
+		// Create a new URL with a special reset-completed parameter
+		// This signals that we've handled the reset request
+		const redirectURL = new URL(url);
+		redirectURL.searchParams.delete("reset");
+		redirectURL.searchParams.set("reset-completed", "true");
+		
+		// Clear the cookie but add the special parameter
+		return clearCookieAndRedirect(context, redirectURL.pathname + redirectURL.search, [
 			options.cookieName,
 		]);
+	}
+	
+	// If we see the reset-completed parameter, show the maintenance page
+	// but remove the parameter to clean up the URL
+	if (url.searchParams.has("reset-completed")) {
+		// Create a clean URL for the next request
+		const cleanURL = new URL(url);
+		cleanURL.searchParams.delete("reset-completed");
+		
+		// First generate the maintenance page
+		const html = renderPage(options);
+		
+		// Then redirect to the clean URL for future requests
+		return new Response(html, {
+			status: 200,
+			headers: {
+				"Content-Type": "text/html",
+				"Refresh": `5; url=${cleanURL.pathname}${cleanURL.search ? cleanURL.search : ""}`
+			}
+		});
 	}
 
 	// If override param is present, set cookie and add special param
