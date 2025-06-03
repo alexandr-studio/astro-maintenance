@@ -6,6 +6,14 @@ import simpleTemplateSource from "./templates/simple.hbs?raw";
 import countdownTemplateSource from "./templates/countdown.hbs?raw";
 import constructionTemplateSource from "./templates/construction.hbs?raw";
 
+// Detect if we're in a Cloudflare environment
+const isCloudflare = typeof globalThis.caches !== 'undefined' && 
+                   typeof globalThis.crypto !== 'undefined' &&
+                   typeof globalThis.Response !== 'undefined' &&
+                   typeof globalThis.Request !== 'undefined' &&
+                   typeof globalThis.addEventListener === 'function' &&
+                   typeof globalThis.fetch === 'function';
+
 // Register helpers for Handlebars
 Handlebars.registerHelper(
 	"ifCond",
@@ -49,10 +57,47 @@ const builtInTemplates: Record<string, string> = {
 // Cache for compiled templates
 const compiledTemplates: Record<string, Handlebars.TemplateDelegate> = {};
 
+// Pre-compile all built-in templates at load time to avoid runtime compilation
+// This is necessary for Cloudflare Workers which don't allow dynamic code evaluation
+const precompiledTemplates: Record<string, Handlebars.TemplateDelegate> = {};
+
+// Only pre-compile if we're not in Cloudflare to avoid the EvalError
+if (!isCloudflare) {
+	Object.entries(builtInTemplates).forEach(([name, source]) => {
+		precompiledTemplates[name] = Handlebars.compile(source);
+	});
+}
+
 // Get or compile a built-in template
-function getCompiledTemplate(
-	templateName: string,
-): Handlebars.TemplateDelegate {
+function getCompiledTemplate(templateName: string): Handlebars.TemplateDelegate {
+	// If we're in Cloudflare, we need to use a different approach that doesn't rely on dynamic code evaluation
+	if (isCloudflare) {
+		// For Cloudflare, we'll use a simple template renderer that doesn't rely on Function constructor
+		return (data) => {
+			// Make sure we have a valid template or fall back to simple
+			const source = builtInTemplates[templateName] || builtInTemplates.simple || '';
+			let html = source;
+			
+			// Very basic variable substitution
+			Object.entries(data).forEach(([key, value]) => {
+				if (typeof value === 'string') {
+					html = html.replace(new RegExp(`{{${key}}}`, 'g'), value);
+					html = html.replace(new RegExp(`\{\{\#if ${key}\}\}([\s\S]*?)\{\{\/if\}\}`, 'g'), '$1');
+				} else if (value) {
+					html = html.replace(new RegExp(`\{\{\#if ${key}\}\}([\s\S]*?)\{\{\/if\}\}`, 'g'), '$1');
+				} else {
+					html = html.replace(new RegExp(`\{\{\#if ${key}\}\}([\s\S]*?)\{\{\/if\}\}`, 'g'), '');
+				}
+			});
+			
+			// Remove any remaining Handlebars expressions
+			html = html.replace(/\{\{[^\}]+\}\}/g, '');
+			
+			return html;
+		};
+	}
+
+	// Normal environment - use compiled templates
 	if (!compiledTemplates[templateName]) {
 		const source = builtInTemplates[templateName];
 		if (!source) {
@@ -74,6 +119,31 @@ function isTemplateContent(template: string): boolean {
 
 // Compile custom template content
 function compileCustomTemplate(templateContent: string): Handlebars.TemplateDelegate {
+	// If in Cloudflare environment, use our compatible approach
+	if (isCloudflare) {
+		return (data) => {
+			let html = templateContent || '';
+			
+			// Very basic variable substitution
+			Object.entries(data).forEach(([key, value]) => {
+				if (typeof value === 'string') {
+					html = html.replace(new RegExp(`{{${key}}}`, 'g'), value);
+					html = html.replace(new RegExp(`\{\{\#if ${key}\}\}([\s\S]*?)\{\{\/if\}\}`, 'g'), '$1');
+				} else if (value) {
+					html = html.replace(new RegExp(`\{\{\#if ${key}\}\}([\s\S]*?)\{\{\/if\}\}`, 'g'), '$1');
+				} else {
+					html = html.replace(new RegExp(`\{\{\#if ${key}\}\}([\s\S]*?)\{\{\/if\}\}`, 'g'), '');
+				}
+			});
+			
+			// Remove any remaining Handlebars expressions
+			html = html.replace(/\{\{[^\}]+\}\}/g, '');
+			
+			return html;
+		};
+	}
+	
+	// Regular environments - use Handlebars
 	try {
 		return Handlebars.compile(templateContent);
 	} catch (error) {
