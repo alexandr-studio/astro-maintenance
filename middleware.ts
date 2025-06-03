@@ -126,8 +126,24 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
 	// Check for override parameter
 	const hasOverrideParam = options.override && url.searchParams.has(options.override);
 	
-	// Look for the special active-bypass parameter that we add with the cookie
-	const activeBypass = url.searchParams.has("active-bypass");
+	// Look for a secure verification token that we generate when setting the cookie
+	const verificationToken = url.searchParams.get("verification");
+	
+	// Function to create a simple hash from the override key and request info
+	// This adds security while still allowing URL-based verification to work with CDNs
+	const createVerificationHash = (key: string) => {
+		// Using a combination of the override key and hostname to create a unique token
+		// This isn't cryptographically secure, but makes it much harder to guess
+		// than a simple static "active-bypass" parameter
+		const str = `${key}-${url.hostname}-maintenance-verification`;
+		let hash = 0;
+		for (let i = 0; i < str.length; i++) {
+			const char = str.charCodeAt(i);
+			hash = ((hash << 5) - hash) + char;
+			hash = hash & hash; // Convert to 32bit integer
+		}
+		return Math.abs(hash).toString(36);
+	};
 
 	// Check for reset request - just look for the 'reset' parameter
 	const hasResetParam = url.searchParams.has("reset");
@@ -166,12 +182,15 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
 		});
 	}
 
-	// If override param is present, set cookie and add special param
+	// If override param is present, set cookie and redirect with verification token
 	if (hasOverrideParam) {
-		// Create a new URL without the override parameter but with active-bypass
+		// Create a verification hash based on the override key
+		const verificationHash = createVerificationHash(options.override);
+		
+		// Create a new URL without the override parameter but with verification token
 		const redirectURL = new URL(url);
 		redirectURL.searchParams.delete(options.override);
-		redirectURL.searchParams.set("active-bypass", "true");
+		redirectURL.searchParams.set("verification", verificationHash);
 		
 		return setCookieAndRedirect(
 			context,
@@ -181,15 +200,20 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
 			},
 			{
 				maxAge: options.cookieMaxAge,
-				httpOnly: false, // Allow JavaScript access
-				secure: url.protocol === "https:", // Only secure if the site is HTTPS
-				sameSite: "Lax", // More compatible with CDNs
+				httpOnly: true, // More secure, client-side JS should not need this
+				secure: url.protocol === "https:", 
+				sameSite: "Lax", // Keep Lax for CDN compatibility
 			},
 		);
 	}
 
-	// Allow bypass if we have the cookie OR the active-bypass parameter
-	if (hasOverrideCookie || activeBypass) {
+	// Verify either the cookie or the verification token is valid
+	// The verification token is a hash based on the override key and hostname
+	// This makes it much harder to bypass without knowing the override key
+	const isValidVerification = verificationToken === createVerificationHash(options.override);
+	
+	// Allow bypass if we have the cookie OR a valid verification token
+	if (hasOverrideCookie || isValidVerification) {
 		return next();
 	}
 
