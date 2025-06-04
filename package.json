@@ -51,6 +51,7 @@
     "index.ts",
     "middleware.ts",
     "renderPage.ts",
+    "templateEngine.ts",
     "cookieHandler.ts",
     "templates/simple.hbs",
     "templates/countdown.hbs",

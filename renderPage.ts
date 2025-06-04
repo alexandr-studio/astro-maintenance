@@ -1,51 +1,10 @@
 import type { MaintenanceOptions } from "./index";
-import Handlebars from "handlebars";
+import { HandlebarsCompatibleEngine, renderTemplate, type TemplateContext } from "./templateEngine";
 
 // Use ?raw to import file content as string
 import simpleTemplateSource from "./templates/simple.hbs?raw";
 import countdownTemplateSource from "./templates/countdown.hbs?raw";
 import constructionTemplateSource from "./templates/construction.hbs?raw";
-
-// Detect if we're in a Cloudflare environment
-const isCloudflare = typeof globalThis.caches !== 'undefined' && 
-                   typeof globalThis.crypto !== 'undefined' &&
-                   typeof globalThis.Response !== 'undefined' &&
-                   typeof globalThis.Request !== 'undefined' &&
-                   typeof globalThis.addEventListener === 'function' &&
-                   typeof globalThis.fetch === 'function';
-
-// Register helpers for Handlebars
-Handlebars.registerHelper(
-	"ifCond",
-	function (
-		this: any,
-		v1: any,
-		operator: string,
-		v2: any,
-		options: Handlebars.HelperOptions,
-	) {
-		switch (operator) {
-			case "==":
-				return v1 == v2 ? options.fn(this) : options.inverse(this);
-			case "===":
-				return v1 === v2 ? options.fn(this) : options.inverse(this);
-			case "!=":
-				return v1 != v2 ? options.fn(this) : options.inverse(this);
-			case "!==":
-				return v1 !== v2 ? options.fn(this) : options.inverse(this);
-			case "<":
-				return v1 < v2 ? options.fn(this) : options.inverse(this);
-			case "<=":
-				return v1 <= v2 ? options.fn(this) : options.inverse(this);
-			case ">":
-				return v1 > v2 ? options.fn(this) : options.inverse(this);
-			case ">=":
-				return v1 >= v2 ? options.fn(this) : options.inverse(this);
-			default:
-				return options.inverse(this);
-		}
-	},
-);
 
 // Built-in templates imported as raw strings
 const builtInTemplates: Record<string, string> = {
@@ -54,98 +13,47 @@ const builtInTemplates: Record<string, string> = {
 	construction: constructionTemplateSource,
 };
 
-// Cache for compiled templates
-const compiledTemplates: Record<string, Handlebars.TemplateDelegate> = {};
+// Cache for compiled template functions (for performance optimization)
+const compiledTemplateCache: Record<string, (context: TemplateContext) => string> = {};
 
-// Pre-compile all built-in templates at load time to avoid runtime compilation
-// This is necessary for Cloudflare Workers which don't allow dynamic code evaluation
-const precompiledTemplates: Record<string, Handlebars.TemplateDelegate> = {};
-
-// Only pre-compile if we're not in Cloudflare to avoid the EvalError
-if (!isCloudflare) {
-	Object.entries(builtInTemplates).forEach(([name, source]) => {
-		precompiledTemplates[name] = Handlebars.compile(source);
-	});
-}
-
-// Get or compile a built-in template
-function getCompiledTemplate(templateName: string): Handlebars.TemplateDelegate {
-	// If we're in Cloudflare, we need to use a different approach that doesn't rely on dynamic code evaluation
-	if (isCloudflare) {
-		// For Cloudflare, we'll use a simple template renderer that doesn't rely on Function constructor
-		return (data) => {
-			// Make sure we have a valid template or fall back to simple
-			const source = builtInTemplates[templateName] || builtInTemplates.simple || '';
-			let html = source;
-			
-			// Very basic variable substitution
-			Object.entries(data).forEach(([key, value]) => {
-				if (typeof value === 'string') {
-					html = html.replace(new RegExp(`{{${key}}}`, 'g'), value);
-					html = html.replace(new RegExp(`\{\{\#if ${key}\}\}([\s\S]*?)\{\{\/if\}\}`, 'g'), '$1');
-				} else if (value) {
-					html = html.replace(new RegExp(`\{\{\#if ${key}\}\}([\s\S]*?)\{\{\/if\}\}`, 'g'), '$1');
-				} else {
-					html = html.replace(new RegExp(`\{\{\#if ${key}\}\}([\s\S]*?)\{\{\/if\}\}`, 'g'), '');
-				}
-			});
-			
-			// Remove any remaining Handlebars expressions
-			html = html.replace(/\{\{[^\}]+\}\}/g, '');
-			
-			return html;
-		};
+/**
+ * Get or compile a built-in template
+ */
+function getCompiledTemplate(templateName: string): (context: TemplateContext) => string {
+	// Check cache first
+	if (compiledTemplateCache[templateName]) {
+		return compiledTemplateCache[templateName];
 	}
 
-	// Normal environment - use compiled templates
-	if (!compiledTemplates[templateName]) {
-		const source = builtInTemplates[templateName];
-		if (!source) {
-			console.error(`Built-in template "${templateName}" not found`);
-			// Fallback to simple template
-			compiledTemplates[templateName] = Handlebars.compile(builtInTemplates.simple);
-		} else {
-			compiledTemplates[templateName] = Handlebars.compile(source);
-		}
+	// Get template source
+	const source = builtInTemplates[templateName];
+	if (!source) {
+		console.error(`Built-in template "${templateName}" not found, falling back to simple template`);
+		// Recursive call to get simple template (which should always exist)
+		return getCompiledTemplate("simple");
 	}
-	return compiledTemplates[templateName];
+
+	// Compile and cache
+	const compiled = HandlebarsCompatibleEngine.compile(source);
+	compiledTemplateCache[templateName] = compiled;
+	
+	return compiled;
 }
 
-// Helper to detect if a string is template content vs template name
+/**
+ * Helper to detect if a string is template content vs template name
+ */
 function isTemplateContent(template: string): boolean {
 	// Template content should contain HTML tags or be multiline
 	return template.includes('<') || template.includes('\n') || template.length > 100;
 }
 
-// Compile custom template content
-function compileCustomTemplate(templateContent: string): Handlebars.TemplateDelegate {
-	// If in Cloudflare environment, use our compatible approach
-	if (isCloudflare) {
-		return (data) => {
-			let html = templateContent || '';
-			
-			// Very basic variable substitution
-			Object.entries(data).forEach(([key, value]) => {
-				if (typeof value === 'string') {
-					html = html.replace(new RegExp(`{{${key}}}`, 'g'), value);
-					html = html.replace(new RegExp(`\{\{\#if ${key}\}\}([\s\S]*?)\{\{\/if\}\}`, 'g'), '$1');
-				} else if (value) {
-					html = html.replace(new RegExp(`\{\{\#if ${key}\}\}([\s\S]*?)\{\{\/if\}\}`, 'g'), '$1');
-				} else {
-					html = html.replace(new RegExp(`\{\{\#if ${key}\}\}([\s\S]*?)\{\{\/if\}\}`, 'g'), '');
-				}
-			});
-			
-			// Remove any remaining Handlebars expressions
-			html = html.replace(/\{\{[^\}]+\}\}/g, '');
-			
-			return html;
-		};
-	}
-	
-	// Regular environments - use Handlebars
+/**
+ * Compile custom template content
+ */
+function compileCustomTemplate(templateContent: string): (context: TemplateContext) => string {
 	try {
-		return Handlebars.compile(templateContent);
+		return HandlebarsCompatibleEngine.compile(templateContent);
 	} catch (error) {
 		console.error(`Error compiling custom template: ${error}`);
 		// Fallback to simple template
@@ -153,7 +61,11 @@ function compileCustomTemplate(templateContent: string): Handlebars.TemplateDele
 	}
 }
 
-export default function renderPage(options: MaintenanceOptions) {
+/**
+ * Main function to render a maintenance page
+ * Works consistently across all deployment environments including Cloudflare Workers
+ */
+export default function renderPage(options: MaintenanceOptions): string {
 	const {
 		template = "simple",
 		title = "We're sorry! The Site is under maintenance right now.",
@@ -166,8 +78,8 @@ export default function renderPage(options: MaintenanceOptions) {
 		socials,
 	} = options;
 
-	// Data to pass to the template
-	const templateData = {
+	// Prepare template context data
+	const templateContext: TemplateContext = {
 		title,
 		description,
 		logo,
@@ -178,26 +90,57 @@ export default function renderPage(options: MaintenanceOptions) {
 		socials,
 	};
 
-	// Check if template is imported content
-	if (typeof template === "string" && isTemplateContent(template)) {
-		const customTemplate = compileCustomTemplate(template);
-		return customTemplate(templateData);
-	}
+	try {
+		// Check if template is custom content (imported using ?raw)
+		if (typeof template === "string" && isTemplateContent(template)) {
+			const customTemplate = compileCustomTemplate(template);
+			return customTemplate(templateContext);
+		}
 
-	// Handle built-in templates by name
-	if (template === "countdown" && countdown) {
-		return getCompiledTemplate("countdown")(templateData);
-	} else if (template === "construction") {
-		return getCompiledTemplate("construction")(templateData);
-	} else if (template === "simple" || !template) {
-		return getCompiledTemplate("simple")(templateData);
-	} else {
-		// If it's a string but not template content, warn about deprecated usage
-		console.warn(
-			`[astro-maintenance] File path templates are no longer supported: "${template}". ` +
-			`Please import your template using "?raw" and pass the content directly. ` +
-			`Falling back to simple template.`
-		);
-		return getCompiledTemplate("simple")(templateData);
+		// Handle built-in templates by name
+		let templateName: string;
+		
+		if (template === "countdown" && countdown) {
+			templateName = "countdown";
+		} else if (template === "construction") {
+			templateName = "construction";
+		} else if (template === "simple" || !template) {
+			templateName = "simple";
+		} else if (typeof template === "string" && builtInTemplates[template]) {
+			templateName = template;
+		} else {
+			// Unknown template name or deprecated file path usage
+			console.warn(
+				`[astro-maintenance] Unknown template "${template}" or file path templates are no longer supported. ` +
+				`Please use "simple", "countdown", "construction", or import your template using "?raw". ` +
+				`Falling back to simple template.`
+			);
+			templateName = "simple";
+		}
+
+		const compiledTemplate = getCompiledTemplate(templateName);
+		return compiledTemplate(templateContext);
+
+	} catch (error) {
+		console.error(`[astro-maintenance] Error rendering template:`, error);
+		
+		// Emergency fallback - render a basic HTML page
+		return `<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>${templateContext.title || 'Site Maintenance'}</title>
+	<style>
+		body { font-family: sans-serif; text-align: center; padding: 50px; }
+		h1 { color: #333; }
+		p { color: #666; }
+	</style>
+</head>
+<body>
+	<h1>${templateContext.title || 'Site Under Maintenance'}</h1>
+	<p>${templateContext.description || 'We\'ll be back shortly!'}</p>
+</body>
+</html>`;
 	}
 }
