@@ -1,27 +1,39 @@
-# Astro-Maintenance
+# Astro-Maintenance v2.0
 
-The main purpose of the integration is to provide a **simple way** to add **maintenance** and **coming soon** pages to Astro projects during development or scheduled maintenance periods. It should be easy to use and highly customizable.
+A powerful **maintenance** and **coming soon** page integration for Astro projects with **universal deployment support**. Easily add beautiful maintenance pages during development or scheduled maintenance periods.
+
+> **🚀 Version 2.0:** Now with **universal adapter support** and enhanced template rendering engine that works flawlessly across **Node.js**, **Cloudflare Workers**, **Vercel**, and **Netlify**.
 
 > **⚠️ IMPORTANT:** This integration only works when Astro is in **server mode** (`output: 'server'`). It will not function with static site generation (`output: 'static'`) as it relies on server middleware to intercept requests.
 
-📚 **Detailed Documentation:** For comprehensive guides and examples, visit [https://astro-maintenance.alexandr.studio/](https://astro-maintenance.alexandr.studio/)
+## ✨ Live Demos
 
-### Features
+Experience astro-maintenance in action across different deployment platforms:
 
-- Predefined templates (simple, countdown, construction)
-- Support for custom Handlebars templates
-- Internal route redirection to custom pages in your Astro site
-- Customizable appearance with logo, text, and contact information
-- Time-based maintenance with automatic countdown (UTC timezone)
-- Automatic disabling of maintenance mode when countdown ends
-- Auto-reload functionality that checks every 10 seconds after countdown ends
-- Override query parameter to bypass the maintenance page and inspect the site
-- Cookie-based override persistence to bypass maintenance page on subsequent visits
-- Cookie deletion when the integration is deactivated or when using override with 'reset' value
+- **🟦 Vercel:** [astro-maintenance.vercel.app](https://astro-maintenance.vercel.app/)
+- **🟨 Netlify:** [astro-maintenance.netlify.app](https://astro-maintenance.netlify.app/)
+- **🟧 Cloudflare:** [astro-maintenance.alexander-sedeke.workers.dev](https://astro-maintenance.alexander-sedeke.workers.dev/)
 
-## Installation
+> 💡 **Platform Demo Sources:** All deployment examples are available in the `/platform-demos` folder in the [repository](https://github.com/alexandr-studio/astro-maintenance/tree/main/platform-demos).
 
-The easiest way to add `astro-maintenance` to your project is using the Astro CLI:
+📚 **Documentation:** [astro-maintenance.alexandr.studio](https://astro-maintenance.alexandr.studio/)
+
+## 🎯 Features
+
+- **Universal Deployment:** Works seamlessly on Node.js, Cloudflare Workers, Vercel, and Netlify
+- **Predefined Templates:** Beautiful built-in templates (simple, countdown, construction)
+- **Custom Templates:** Support for custom Handlebars templates with `?raw` imports
+- **Route Redirection:** Internal route redirection to custom pages in your Astro site
+- **Rich Customization:** Logo, text, contact information, and social media links
+- **Countdown Timer:** Time-based maintenance with automatic countdown (UTC timezone)
+- **Auto-disable:** Automatic disabling when countdown ends with auto-reload functionality
+- **Override System:** Query parameter bypass with cookie-based persistence
+- **Environment Variables:** Runtime configuration without rebuilding
+- **Enhanced Security:** HttpOnly cookies with configurable expiration
+
+## 🚀 Installation
+
+### Automatic Setup (Recommended)
 
 ```bash
 # Using pnpm
@@ -34,26 +46,18 @@ npm run astro add astro-maintenance
 yarn astro add astro-maintenance
 ```
 
-This command automatically installs the integration and adds it to your `astro.config.mjs`.
-
-If you prefer a manual setup or want more control, follow the steps below.
-
-### Manual Install
-
-First, install the package:
+### Manual Installation
 
 ```bash
-# npm
+# Install the package
 npm install astro-maintenance
-
-# yarn
-yarn add astro-maintenance
-
-# pnpm
+# or
 pnpm add astro-maintenance
+# or
+yarn add astro-maintenance
 ```
 
-Then, update your `astro.config.mjs`:
+Then add to your `astro.config.mjs`:
 
 ```js
 import { defineConfig } from "astro/config";
@@ -64,318 +68,353 @@ export default defineConfig({
 });
 ```
 
-You can pass options to customize the behavior (see below).
-
-```bash
-# npm
-npm install astro-maintenance
-
-# yarn
-yarn add astro-maintenance
-
-# pnpm
-pnpm add astro-maintenance
-```
-
-## Usage
-
-Add the integration to your Astro configuration file:
+## 📖 Quick Start
 
 ```js
 // astro.config.mjs
 import { defineConfig } from "astro/config";
-import { maintenance } from "astro-maintenance";
+import maintenance from "astro-maintenance";
 
 export default defineConfig({
   integrations: [
     maintenance({
-      enabled: true, // Set to false to disable maintenance mode
-      template: "simple", // Options: 'simple', 'countdown', 'construction' or imported template content
+      enabled: true,
+      template: "simple", // 'simple', 'countdown', 'construction'
       title: "Site Under Maintenance",
-      description:
-        "We are performing scheduled maintenance. Please check back soon.",
-      // Other optional parameters...
+      description: "We're making improvements. Please check back soon!",
+      override: "preview", // Access site with ?preview
     }),
   ],
 });
 ```
 
-## Configuration Options
+## ⚙️ Configuration Options
 
-The integration accepts the following configuration options:
+| Property       | Type                                                  | Description                                                                                  | Default                        |
+| -------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------- | ------------------------------ |
+| `enabled`      | `boolean`                                             | Enable or disable maintenance mode                                                           | `true`                         |
+| `template`     | `'simple' \| 'countdown' \| 'construction' \| string` | Built-in template name or imported custom template content                                   | `'simple'`                     |
+| `title`        | `string`                                              | Page title                                                                                   | `'Site under maintenance'`     |
+| `description`  | `string`                                              | Description text                                                                             | `"We'll be back shortly!"`     |
+| `logo`         | `string`                                              | URL to your logo image                                                                       | `undefined`                    |
+| `emailAddress` | `string`                                              | Contact email address                                                                        | `undefined`                    |
+| `emailText`    | `string`                                              | Text displayed before email address                                                          | `'Contact us for assistance:'` |
+| `copyright`    | `string`                                              | Copyright text                                                                               | `'Copyright © 2025'`           |
+| `countdown`    | `string`                                              | ISO date string for countdown timer (UTC)                                                   | `undefined`                    |
+| `override`     | `string`                                              | Query parameter to bypass maintenance                                                        | `'bypass'`                     |
+| `cookieName`   | `string`                                              | Override cookie name                                                                         | `'astro_maintenance_override'` |
+| `cookieMaxAge` | `number`                                              | Cookie expiration in seconds                                                                 | `604800` (7 days)              |
+| `allowedPaths` | `string[]`                                            | Paths that bypass maintenance mode                                                           | `[]`                           |
+| `socials`      | `object`                                              | Social media links (see Social Media section)                                               | `undefined`                    |
 
-| Property       | Type                                                  | Description                                                                                  | Required |
-| -------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------- |
-| `enabled`      | `boolean`                                             | Enable or disable maintenance mode                                                           | Yes      |
-| `template`     | `'simple' \| 'countdown' \| 'construction' \| string` | Built-in template, imported template content, or route path                                  | -        |
-| `title`        | `string`                                              | Page title (default: `'Site under maintenance'`)                                             | -        |
-| `description`  | `string`                                              | Description text                                                                             | -        |
-| `logo`         | `string`                                              | URL to your logo image. Must reside in the `assets` or `logo` subfolder of the public folder | -        |
-| `emailAddress` | `string`                                              | Contact email address                                                                        | -        |
-| `emailText`    | `string`                                              | Text to display before the email address (default: `'Contact us:'`)                          | -        |
-| `copyright`    | `string`                                              | Copyright text                                                                               | -        |
-| `countdown`    | `string`                                              | ISO date string for countdown timer in UTC (e.g., `'2025-12-31T23:59:59'`)                   | -        |
-| `override`     | `string`                                              | Query parameter to bypass maintenance mode (e.g., `'preview'`)                               | -        |
-| `cookieName`   | `string`                                              | Name of the cookie used for override persistence (default: `'astro_maintenance_override'`)   | -        |
-| `cookieMaxAge` | `number`                                              | Max age of the override cookie in seconds (default: `604800` - 7 days)                       | -        |
-| `socials`      | `object`                                              | Social media links to display on the maintenance page (see details below)                    | -        |
+## 🌐 Universal Platform Support
 
-### Socials Configuration
+**Version 2.0** introduces a completely rewritten template engine ensuring **identical behavior** across all deployment platforms:
 
-The `socials` option allows you to display social media links on your maintenance page. You can configure the following platforms:
+| Platform              | Status | Runtime              | Notes                                     |
+| --------------------- | ------ | -------------------- | ----------------------------------------- |
+| **Node.js**           | ✅     | Node.js server       | Standalone and middleware modes           |
+| **Cloudflare Workers** | ✅     | V8 isolates          | Full edge computing support               |
+| **Vercel**            | ✅     | Serverless functions | Functions and Edge Runtime                |
+| **Netlify**           | ✅     | Serverless functions | CDN-compatible with proper redirects      |
+| **Local Development** | ✅     | Node.js              | `astro dev` with hot reload               |
 
-| Social Platform | Property    | Description                                        |
-| --------------- | ----------- | -------------------------------------------------- |
-| Facebook        | `facebook`  | URL to your Facebook page or profile               |
-| X (Twitter)     | `x`         | URL to your X (formerly Twitter) profile           |
-| Instagram       | `instagram` | URL to your Instagram profile                      |
-| YouTube         | `youtube`   | URL to your YouTube channel                        |
-| LinkedIn        | `linkedin`  | URL to your LinkedIn profile or company page       |
-| GitHub          | `github`    | URL to your GitHub profile or repository           |
-| Mastodon        | `mastodon`  | URL to your Mastodon profile                       |
-| Pinterest       | `pinterest` | URL to your Pinterest profile                      |
-| TikTok          | `tiktok`    | URL to your TikTok profile                         |
-| Discord         | `discord`   | URL to your Discord server invitation              |
-| Slack           | `slack`     | URL to your Slack workspace invitation            |
-| Twitch          | `twitch`    | URL to your Twitch channel                         |
-| Reddit          | `reddit`    | URL to your Reddit profile or subreddit            |
+> **🎯 Breaking Change Note:** File path-based custom templates are no longer supported. See the migration guide below.
 
-Example configuration:
+## 🔄 Migration from v1.x to v2.0
+
+### ✅ What Still Works (No Changes Required)
+
+- All built-in templates (`'simple'`, `'countdown'`, `'construction'`)
+- All configuration options and their behavior
+- Environment variable overrides
+- Override system and cookie persistence
+- Route redirection functionality
+
+### ⚠️ Breaking Change: Custom Templates
+
+**v1.x (deprecated):**
+```js
+maintenance({
+  template: "./src/templates/custom.hbs", // ❌ No longer supported
+});
+```
+
+**v2.0 (required):**
+```js
+// Import template content using ?raw
+import customTemplate from "./src/templates/custom.hbs?raw";
+
+maintenance({
+  template: customTemplate, // ✅ Pass imported content
+});
+```
+
+### 📁 Examples Available
+
+Check the `/examples` folder in the repository for complete migration examples and best practices.
+
+## 🎨 Template Examples
+
+### Built-in Templates
+
+```js
+// Simple maintenance page
+maintenance({
+  enabled: true,
+  template: "simple",
+  title: "We'll be back soon!",
+  description: "Scheduled maintenance in progress.",
+  logo: "/logo.png",
+  emailAddress: "support@example.com",
+});
+
+// Countdown timer
+maintenance({
+  enabled: true,
+  template: "countdown",
+  title: "Launching Soon!",
+  countdown: "2025-06-01T12:00:00Z", // UTC timezone
+  description: "Our new website is coming...",
+});
+
+// Under construction
+maintenance({
+  enabled: true,
+  template: "construction",
+  title: "Under Construction",
+  description: "Building something amazing.",
+});
+```
+
+### Custom Template with v2.0
+
+```js
+// Import your template as raw content
+import customTemplate from './src/templates/maintenance.hbs?raw';
+
+maintenance({
+  enabled: true,
+  template: customTemplate,
+  title: "Custom Maintenance",
+  description: "Personalized maintenance experience",
+  logo: "/custom-logo.png",
+  socials: {
+    twitter: "https://twitter.com/yourhandle",
+    github: "https://github.com/yourusername",
+  },
+});
+```
+
+**Example Custom Template (`maintenance.hbs`):**
+```handlebars
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+  <style>
+    /* Your custom styles */
+    body { font-family: sans-serif; text-align: center; padding: 50px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    {{#if logo}}
+      <img src="{{logo}}" alt="Logo" class="logo" />
+    {{else}}
+      <div class="default-logo">🔧</div>
+    {{/if}}
+    
+    <h1>{{title}}</h1>
+    <p>{{description}}</p>
+    
+    {{#if emailAddress}}
+      <p>{{emailText}} <a href="mailto:{{emailAddress}}">{{emailAddress}}</a></p>
+    {{/if}}
+    
+    {{#if socials}}
+      <div class="social-links">
+        {{#if socials.twitter}}
+          <a href="{{socials.twitter}}" target="_blank">Twitter</a>
+        {{/if}}
+        {{#if socials.github}}
+          <a href="{{socials.github}}" target="_blank">GitHub</a>
+        {{/if}}
+      </div>
+    {{/if}}
+    
+    {{#if copyright}}
+      <footer>{{copyright}}</footer>
+    {{/if}}
+  </div>
+</body>
+</html>
+```
+
+## 🔗 Social Media Integration
+
+Add social media links to your maintenance page:
 
 ```js
 maintenance({
   // ... other options
   socials: {
     facebook: 'https://facebook.com/yourpage',
-    x: 'https://x.com/yourusername',
-    instagram: 'https://instagram.com/yourusername',
-    github: 'https://github.com/yourusername'
+    x: 'https://x.com/yourhandle',           // formerly Twitter
+    instagram: 'https://instagram.com/yourhandle',
+    youtube: 'https://youtube.com/yourchannel',
+    linkedin: 'https://linkedin.com/in/yourprofile',
+    github: 'https://github.com/yourusername',
+    mastodon: 'https://mastodon.social/@yourhandle',
+    pinterest: 'https://pinterest.com/yourhandle',
+    tiktok: 'https://tiktok.com/@yourhandle',
+    discord: 'https://discord.gg/yourinvite',
+    slack: 'https://yourworkspace.slack.com',
+    twitch: 'https://twitch.tv/yourchannel',
+    reddit: 'https://reddit.com/u/yourusername'
   }
 });
 ```
 
-## Environment Variables
+## 🌍 Environment Variables
 
-You can override the configuration options using environment variables. This is useful for changing settings in different environments (development, staging, production) without rebuilding your application.
+Override any configuration at runtime using environment variables:
 
-Environment variables take precedence over programmatically defined settings, allowing you to easily modify behavior in containerized deployments or CI/CD pipelines.
-
-| Environment Variable         | Type      | Description                                |
-| ---------------------------- | --------- | ------------------------------------------ |
-| `MAINTENANCE_ENABLED`        | `boolean` | Enable or disable maintenance mode         |
-| `MAINTENANCE_TEMPLATE`       | `string`  | Template to use                            |
-| `MAINTENANCE_TITLE`          | `string`  | Page title                                 |
-| `MAINTENANCE_DESCRIPTION`    | `string`  | Description text                           |
-| `MAINTENANCE_LOGO`           | `string`  | URL to your logo image                     |
-| `MAINTENANCE_EMAIL_ADDRESS`  | `string`  | Contact email address                      |
-| `MAINTENANCE_EMAIL_TEXT`     | `string`  | Text to display before the email address   |
-| `MAINTENANCE_COPYRIGHT`      | `string`  | Copyright text                             |
-| `MAINTENANCE_COUNTDOWN`      | `string`  | ISO date string for countdown timer        |
-| `MAINTENANCE_OVERRIDE`       | `string`  | Query parameter to bypass maintenance mode |
-| `MAINTENANCE_COOKIE_MAX_AGE` | `number`  | Max age of the override cookie in seconds  |
-
-### Example with Environment Variables
-
-```sh
-# Enable maintenance mode with a countdown
+```bash
+# Toggle maintenance mode
 MAINTENANCE_ENABLED=true
 MAINTENANCE_TEMPLATE="countdown"
-MAINTENANCE_TITLE="We're launching soon!"
-MAINTENANCE_COUNTDOWN="2025-12-31T23:59:59"
+MAINTENANCE_TITLE="Launching Soon!"
+MAINTENANCE_DESCRIPTION="Our new site is almost ready!"
+MAINTENANCE_COUNTDOWN="2025-12-31T23:59:59Z"
+MAINTENANCE_OVERRIDE="preview"
+MAINTENANCE_LOGO="/assets/logo.png"
+MAINTENANCE_EMAIL_ADDRESS="hello@example.com"
+MAINTENANCE_COPYRIGHT="© 2025 Your Company"
 ```
 
-This approach is particularly useful for:
+**Available Environment Variables:**
+- `MAINTENANCE_ENABLED` (boolean)
+- `MAINTENANCE_TEMPLATE` (string)
+- `MAINTENANCE_TITLE` (string)
+- `MAINTENANCE_DESCRIPTION` (string)
+- `MAINTENANCE_LOGO` (string)
+- `MAINTENANCE_EMAIL_ADDRESS` (string)
+- `MAINTENANCE_EMAIL_TEXT` (string)
+- `MAINTENANCE_COPYRIGHT` (string)
+- `MAINTENANCE_COUNTDOWN` (string)
+- `MAINTENANCE_OVERRIDE` (string)
+- `MAINTENANCE_COOKIE_MAX_AGE` (number)
 
-- Toggling maintenance mode in production without code changes
-- Setting different configurations across environments
-- Deploying containerized applications where rebuilding is costly
-- Managing feature flags in CI/CD pipelines
+## 🍪 Override System
 
-## Compatibility
+### Query Parameter Bypass
 
-The `astro-maintenance` integration supports middleware across various deployment platforms:
+Access your site during maintenance using the override parameter:
 
-## Supported Deployment Targets
+```bash
+# Bypass maintenance mode
+https://yoursite.com?preview
 
-| Platform              | Runtime              | Middleware Support       | Notes                                                             |
-| --------------------- | -------------------- | ------------------------ | ----------------------------------------------------------------- |
-| **Astro Dev**         | Node.js server       | ✅ Yes                   | Default for `pnpm dev`; middleware is active                      |
-| **Node (standalone)** | Node.js SSR          | ✅ Yes                   | Middleware is bundled into `entry.mjs` and works when self-hosted |
-| **Node (middleware)** | Node.js SSR          | ✅ Yes                   | Middleware is registered into existing Node app                   |
-| **Vercel**            | Serverless Functions | ✅ Yes                   | Middleware is bundled into per-route functions                    |
-| **Vercel Edge**       | Edge Runtime         | ⚠️ Not officially tested | Requires edge-compatible code and explicit setup                  |
-| **Netlify**           | Serverless Functions | ✅ Yes                   | Middleware runs in each function just like Vercel                 |
-| **Cloudflare**        | Edge Runtime         | ✅ Yes                   | Works when using `@astrojs/cloudflare` adapter                    |
-| **Static Output**     | N/A                  | ❌ No                    | Middleware is not supported in `output: "static"` mode            |
+# Reset override cookie
+https://yoursite.com?preview=reset
+```
 
-## Examples
+### Cookie Persistence
 
-### Basic Maintenance Page
+Once accessed with the override parameter, a secure HttpOnly cookie is set allowing subsequent visits without the parameter.
 
 ```js
 maintenance({
-  enabled: true,
-  template: "simple",
-  title: "We'll be back soon!",
-  description: "Our website is currently undergoing scheduled maintenance.",
-  emailAddress: "support@example.com",
-  emailText: "Need assistance? Contact us at:",
-  copyright: " 2025 Your Company",
-  override: "preview", // Access your site with ?preview in the URL
-  cookieName: "my_override_cookie", // Optional: custom cookie name
-  cookieMaxAge: 86400, // Optional: cookie expires after 24 hours (in seconds)
-});
-```
-
-##### Preview - Basic Maintenance Page
-
-### Countdown Timer
-
-```js
-maintenance({
-  enabled: true,
-  template: "countdown",
-  title: "Coming Soon!",
-  description: "Our new website is launching soon.",
-  logo: "/logo.png",
-  countdown: "2025-06-01T12:00:00Z", // Launch date in UTC (note the 'Z' for UTC timezone)
-  emailAddress: "hello@example.com",
-});
-```
-
-**Note**: The countdown displays time in UTC. When the countdown reaches zero, the maintenance page will:
-
-1. Automatically disable itself - visitors will see your actual site
-2. If there's a time mismatch, the page will attempt to reload every 10 seconds until maintenance mode is disabled
-
-##### Preview - Countdown Timer
-
-### Under Construction
-
-```js
-maintenance({
-  enabled: true,
-  template: "construction",
-  title: "Under Construction",
-  description: "We are building something awesome.",
-  emailAddress: "hello@example.com",
-});
-```
-
-##### Preview - Under Construction
-
-### Cookie-Based Override Persistence
-
-The integration now supports cookie-based persistence for the override parameter. When a user accesses the site with the override parameter (e.g., `?preview`), a secure HttpOnly cookie is set that allows them to bypass the maintenance page on subsequent visits without needing to use the override parameter each time.
-
-```js
-maintenance({
-  enabled: true,
-  template: "simple",
   override: "preview",
-  cookieName: "my_custom_cookie", // Optional: defaults to "astro_maintenance_override"
-  cookieMaxAge: 3600, // Optional: cookie expiration in seconds, defaults to 7 days
+  cookieName: "maintenance_bypass",
+  cookieMaxAge: 86400, // 24 hours
 });
 ```
 
-#### Resetting the Override Cookie
+## 🛣️ Route Redirection
 
-The override cookie can be reset in any of the following ways:
-
-1. Adding `=reset` to the override parameter (e.g., `?preview=reset`)
-2. Disabling the maintenance integration (`enabled: false`)
-
-### Internal Route Redirection
-
-You can redirect users to a custom page in your Astro project by setting the template to a route path that starts with `/`:
+Redirect to custom Astro pages instead of using templates:
 
 ```js
 maintenance({
   enabled: true,
-  template: "/custom-maintenance", // Redirects to this route in your Astro site
+  template: "/custom-maintenance", // Redirects to this route
   override: "preview",
 });
 ```
 
-This performs a 302 redirect to the specified route when maintenance mode is enabled. You'll need to create this page in your Astro project at the specified route. This is useful when you want to use a fully-featured Astro page with components and styling for your maintenance page.
+Create the corresponding page at `src/pages/custom-maintenance.astro`:
 
-### Custom Template
-
-You can use a custom Handlebars template by importing it as raw content and passing it directly to the template option. This approach ensures compatibility with serverless environments like Cloudflare and Vercel.
-
-```js
-// Import your custom template as raw string content
-import customTemplate from './src/templates/custom-maintenance.hbs?raw';
-
-maintenance({
-  enabled: true,
-  template: customTemplate, // Pass imported template content directly
-  title: "Custom Maintenance Page",
-  description: "Our site is getting an upgrade.",
-  // ... other options will be passed to the template
-});
-```
-
-> **⚠️ Breaking Change:** File path-based templates (e.g., `"./templates/custom.hbs"`) are no longer supported to ensure serverless compatibility. You must now import templates using the `?raw` suffix and pass the content directly.
-
-Here's an example of a custom Handlebars template:
-
-```handlebars
-<html lang="en">
+```astro
+---
+// src/pages/custom-maintenance.astro
+---
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{title}}</title>
+    <title>Custom Maintenance</title>
   </head>
   <body>
-    <div class="your-container">
-      {{#if logo}}<img src="{{logo}}" alt="Logo" />{{/if}}
-      <h1>{{title}}</h1>
-      <div class="description">{{description}}</div>
-
-      {{#if emailAddress}}
-        <div class="contact">
-          {{emailText}}
-          <a href="mailto:{{emailAddress}}">{{emailAddress}}</a>
-        </div>
-      {{/if}}
-
-      {{#if copyright}}
-        <footer>{{copyright}}</footer>
-      {{/if}}
-    </div>
+    <h1>Site Under Maintenance</h1>
+    <p>We're making improvements!</p>
   </body>
 </html>
 ```
 
-## Development Setup
+## ⏱️ Countdown Timer Features
 
-If you want to contribute to this project:
+### Automatic Disable
 
-1. Clone the repository
-2. Install dependencies: `pnpm install`
-3. Build the package: `pnpm build`
+When countdown reaches zero, maintenance mode automatically disables:
 
-## Testing
+```js
+maintenance({
+  template: "countdown",
+  countdown: "2025-06-01T12:00:00Z", // UTC timezone
+  // Automatically disabled when this date/time is reached
+});
+```
 
-The integration includes a comprehensive test suite using Playwright for end-to-end testing. The tests verify the functionality of the maintenance page features in a real Astro environment.
+### Auto-reload
 
-### Running Tests
+The page checks every 10 seconds after countdown ends and automatically reloads when maintenance is disabled.
+
+## 🧪 Testing
 
 ```bash
-# Install Playwright browsers (only needed once)
+# Install test dependencies
+pnpm install
+
+# Install Playwright browsers (first time only)
 pnpm run install:browsers
 
-# Run the simplified test
-pnpm run test -- basic.spec.ts
-
-# Run all tests
+# Run tests
 pnpm run test
 
-# Clean up test projects folder
+# Clean up test artifacts
 pnpm run cleanup:test
 ```
 
-## License
+## 📚 Examples & Demos
 
-MIT
+- **📁 Examples:** `/examples` folder contains migration examples and advanced configurations
+- **🚀 Platform Demos:** `/platform-demos` folder contains complete deployment examples for each platform
+- **🌐 Live Demos:** See the live demos section above for working examples
+
+## 🤝 Contributing
+
+1. Clone the repository
+2. Install dependencies: `pnpm install`
+3. Make your changes
+4. Run tests: `pnpm test`
+5. Submit a pull request
+
+## 📄 License
+
+MIT © [Alexander Sedeke](https://github.com/alexandr-studio)
+
+---
+
+**🎉 Version 2.0** delivers universal platform compatibility with enhanced reliability. Upgrade today for the best maintenance page experience across all deployment targets!
