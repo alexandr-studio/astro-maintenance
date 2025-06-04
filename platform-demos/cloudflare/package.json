@@ -1,0 +1,26 @@
+{
+  "name": "astro-maintenance",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "prebuild": "del-cli dist",
+    "build": "astro build",
+    "preview": "astro build && wrangler dev",
+    "astro": "astro",
+    "deploy": "astro build && wrangler deploy",
+    "cf-typegen": "wrangler types",
+    "wrangler:build": "pnpm dlx wrangler build",
+    "wrangler:deploy": "pnpm dlx wrangler deploy"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^12.5.3",
+    "astro": "^5.8.2",
+    "astro-maintenance": "2.0.0-next.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "del-cli": "^6.0.0",
+    "wrangler": "^4.19.1"
+  }
+}
