@@ -14,7 +14,7 @@ export default defineConfig({
       template: "construction",
       title: "Astro Maintenance on Netlify",
       description:
-        "Testing the Astro Maintenance page version 2.0.0-next.1 on Netlify. The override key is 'astro'. Try it out by adding `?astro` to the URL. ",
+        "Testing the Astro Maintenance page version 2.0.0 on Netlify. The override key is 'astro'. Try it out by adding `?astro` to the URL.",
       socials: {
         github: "https://github.com/alexandr-studio/astro-maintenance",
       },

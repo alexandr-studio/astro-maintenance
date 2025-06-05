@@ -18,7 +18,7 @@ export default defineConfig({
       template: "construction",
       title: "Astro Maintenance on Cloudflare",
       description:
-        "Testing the Astro Maintenance page version 2.0.0-next.3 on Cloudflare. The override key is 'astro'. Try it out by adding `?astro` to the URL. ",
+        "Testing the Astro Maintenance page version 2.0.0 on Cloudflare. The override key is 'astro'. Try it out by adding `?astro` to the URL.",
       socials: {
         github: "https://github.com/alexandr-studio/astro-maintenance",
       },

@@ -15,8 +15,8 @@ importers:
         specifier: ^5.8.2
         version: 5.8.2(@netlify/blobs@8.2.0)(@types/node@22.15.29)(rollup@4.41.1)(typescript@5.8.3)
       astro-maintenance:
-        specifier: 2.0.0-next.3
-        version: 2.0.0-next.3(astro@5.8.2(@netlify/blobs@8.2.0)(@types/node@22.15.29)(rollup@4.41.1)(typescript@5.8.3))
+        specifier: 2.0.0
+        version: 2.0.0(astro@5.8.2(@netlify/blobs@8.2.0)(@types/node@22.15.29)(rollup@4.41.1)(typescript@5.8.3))
     devDependencies:
       del-cli:
         specifier: ^6.0.0
@@ -885,8 +885,8 @@ packages:
     resolution: {integrity: sha512-WHw67kLXYbZuHTmcdbIrVArCq5wxo6NEuj3hiYAWr8mwJeC+C2mMCIBIWCiDoCye/OF/xelc+teJ1ERoWmnEIA==}
     engines: {node: '>=18'}
 
-  astro-maintenance@2.0.0-next.3:
-    resolution: {integrity: sha512-4e4Jz8oqSZWsEw+vn6E+20lmeF9wpm5RgjnvRaZBk/dzqLdeHJfvOQH/lbNCFW0SrHfUb5y4O/ZfmlBwdbYoEw==}
+  astro-maintenance@2.0.0:
+    resolution: {integrity: sha512-fQoeRMLjmEjJMWChFbKOlLJbfKqdt47/L1BYLMv69ehlcaUs1KUkUSfQs2ckKZepDdgP730+IxdFl4Qqah3MSQ==}
     engines: {node: ^20.3.0 || >=21.0.0}
     peerDependencies:
       astro: ^5.0.0
@@ -3704,7 +3704,7 @@ snapshots:
 
   ast-module-types@6.0.1: {}
 
-  astro-maintenance@2.0.0-next.3(astro@5.8.2(@netlify/blobs@8.2.0)(@types/node@22.15.29)(rollup@4.41.1)(typescript@5.8.3)):
+  astro-maintenance@2.0.0(astro@5.8.2(@netlify/blobs@8.2.0)(@types/node@22.15.29)(rollup@4.41.1)(typescript@5.8.3)):
     dependencies:
       '@astrojs/node': 9.2.2(astro@5.8.2(@netlify/blobs@8.2.0)(@types/node@22.15.29)(rollup@4.41.1)(typescript@5.8.3))
       astro: 5.8.2(@netlify/blobs@8.2.0)(@types/node@22.15.29)(rollup@4.41.1)(typescript@5.8.3)
